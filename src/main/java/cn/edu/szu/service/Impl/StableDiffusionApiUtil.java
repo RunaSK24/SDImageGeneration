@@ -1,35 +1,27 @@
-package cn.edu.szu.Service;
+package cn.edu.szu.service.Impl;
 
 import cn.edu.szu.domain.*;
-import cn.edu.szu.service.Impl.ImageUtil;
 import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-@Slf4j
-public class StableDiffusionTest {
+public class StableDiffusionApiUtil {
 
-    @Test
-    public void testSdApi() throws IOException {
-        StableDiffusionTextToImg body = getArtisticWordStableDiffusionTextToImg();
-        final List<String> images = callSdApi(body);
-        for (String image : images) {
-            ImageUtil.convertBase64StrToImage(image, String.format("./src/main/resources/image/%s.png", UUID.randomUUID().toString().replaceAll("-", "")));
-            //writeBase642ImageFile(image, String.format("./src/main/resources/image/%s.png", UUID.randomUUID().toString().replaceAll("-", "")));
-        }
-    }
-
-    private StableDiffusionTextToImg getArtisticWordStableDiffusionTextToImg() throws IOException {
+    /**
+     * 拼接请求体
+     *
+     * @param prompt
+     * @return
+     */
+    public static StableDiffusionTextToImg getText2ImageRequestBody(String prompt) {
         final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
 
         Args args1 = Args.builder()
@@ -66,9 +58,13 @@ public class StableDiffusionTest {
                 .threshold_b(0)
                 .build();
 
+        List<Args> argsList = new ArrayList<Args>();
+        argsList.add(args1);
+        argsList.add(args2);
+
         String vae = "pastel-waifu-diffusion.vae.pt";
         StableDiffusionTextToImg body = StableDiffusionTextToImg.builder().sampler_name("")
-                .prompt("masterpiece, best quality, very detailed, extremely detailed beautiful, super detailed, tousled hair, illustration, dynamic angles, girly, fashion clothing, standing, mannequin, looking at viewer, interview, beach, beautiful detailed eyes, exquisitely beautiful face, floating, high saturation, beautiful and detailed light and shadow")
+                .prompt(prompt)
                 .negative_prompt("loli,nsfw,logo,text,badhandv4,EasyNegative,ng_deepnegative_v1_75t,rev2-badprompt,verybadimagenegative_v1.3,negative_hand-neg,mutated hands and fingers,poorly drawn face,extra limb,missing limb,disconnected limbs,malformed hands,ugly")
                 .sampler_index("DPM++ SDE Karras")
                 .seed(-1)
@@ -81,7 +77,7 @@ public class StableDiffusionTest {
                 .script_args(new ArrayList<>())
                 .alwayson_scripts(AlwaysonScripts.builder()
                         .controlnet(ControlNet.builder()
-                                .args(Lists.newArrayList(args1, args2))
+                                .args(argsList)
                                 .build())
                         .build())
                 .steps(28)
@@ -94,60 +90,58 @@ public class StableDiffusionTest {
         return body;
     }
 
-    private List<String> callSdApi(StableDiffusionTextToImg body) {
+    /**
+     * 调用SD的api
+     *
+     * @param body
+     * @return
+     */
+    public static List<String> callSdApi(StableDiffusionTextToImg body) {
         RestTemplate restTemplate = new RestTemplate();
+        //定义HTTP请求头
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        //组装请求体
         HttpEntity<StableDiffusionTextToImg> requestEntity = new HttpEntity<>(body, headers);
+
+        //发送请求
         ResponseEntity<JSONObject> entity = restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
+
+        //处理返回消息
         final StableDiffusionTextToImgResponse stableDiffusionTextToImgResponse = handleResponse(entity);
+
+        //拿出image的base64数据
         final List<String> images = stableDiffusionTextToImgResponse.getImages();
 
         if (CollectionUtils.isEmpty(images)) {
-            log.info("empty images");
-            return Lists.newArrayList();
+            System.out.println("empty images");
+            return new ArrayList<>();
         }
 
         return images;
     }
 
-    private StableDiffusionTextToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
+    /**
+     * 处理返回值，封装成对象
+     *
+     * @param response
+     * @return
+     */
+    private static StableDiffusionTextToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
+        //api调用失败
         if (Objects.isNull(response) || !response.getStatusCode().is2xxSuccessful()) {
-            log.warn("call stable diffusion api status code: {}", JSONObject.toJSONString(response));
+            System.out.println("call stable diffusion api status code: " + JSONObject.toJSONString(response));
+            //可能需要抛出异常
+        }
+        final JSONObject body = response.getBody();
+        //返回为空
+        if (Objects.isNull(body)) {
+            System.out.println("send request failed. response body is empty");
+            //可能需要抛出异常
         }
 
-        final JSONObject body = response.getBody();
-        if (Objects.isNull(body)) {
-            log.error("send request failed. response body is empty");
-        }
+        //封装数据
         return body.toJavaObject(StableDiffusionTextToImgResponse.class);
     }
-
-
-//    public static void writeBase642ImageFile(String image, String fileName) {
-//        try (OutputStream outputStream = new FileOutputStream(fileName)) {
-//            byte[] imageBytes = Base64.getDecoder().decode(image);
-//            ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
-//
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//            while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                outputStream.write(buffer, 0, bytesRead);
-//            }
-//
-//            log.info("图片写入成功！");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public static String convertImageToBase64(String imagePath) throws IOException {
-//        File file = new File(imagePath);
-//        FileInputStream fileInputStream = new FileInputStream(file);
-//        byte[] imageData = new byte[(int) file.length()];
-//        fileInputStream.read(imageData);
-//        fileInputStream.close();
-//        return Base64.getEncoder().encodeToString(imageData);
-//    }
 }

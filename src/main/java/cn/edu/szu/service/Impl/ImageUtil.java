@@ -53,7 +53,8 @@ public class ImageUtil {
      * @param base64String
      * @param imageFileName
      */
-    public static void convertBase64StrToImage(String base64String, String imageFileName) {
+    public static String convertBase64StrToImage(String base64String, String imageFileName) {
+        String filePath = "";
         ByteArrayInputStream bais = null;
         try {
             //获取图片类型
@@ -66,6 +67,8 @@ public class ImageUtil {
             BufferedImage bufferedImage = ImageIO.read(bais);
             //构建文件
             File imageFile = new File(imageFileName);
+            //保存图片地址
+            filePath = imageFile.getAbsolutePath();
             //写入生成文件
             ImageIO.write(bufferedImage, suffix, imageFile);
         } catch (Exception e) {
@@ -79,6 +82,7 @@ public class ImageUtil {
                 e.printStackTrace();
             }
         }
+        return filePath;
     }
 
 }
