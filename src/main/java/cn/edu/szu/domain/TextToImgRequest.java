@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StableDiffusionTextToImg implements Serializable {
+public class TextToImgRequest implements Serializable {
     /**
      * 默认 {}
      */

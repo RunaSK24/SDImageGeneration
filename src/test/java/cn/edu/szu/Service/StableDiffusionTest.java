@@ -21,7 +21,7 @@ public class StableDiffusionTest {
 
     @Test
     public void testSdApi() throws IOException {
-        StableDiffusionTextToImg body = getArtisticWordStableDiffusionTextToImg();
+        TextToImgRequest body = getArtisticWordStableDiffusionTextToImg();
         final List<String> images = callSdApi(body);
         for (String image : images) {
             ImageUtil.convertBase64StrToImage(image, String.format("./src/main/resources/image/%s.png", UUID.randomUUID().toString().replaceAll("-", "")));
@@ -29,7 +29,7 @@ public class StableDiffusionTest {
         }
     }
 
-    private StableDiffusionTextToImg getArtisticWordStableDiffusionTextToImg() throws IOException {
+    private TextToImgRequest getArtisticWordStableDiffusionTextToImg() throws IOException {
         final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
 
         Args args1 = Args.builder()
@@ -67,7 +67,7 @@ public class StableDiffusionTest {
                 .build();
 
         String vae = "pastel-waifu-diffusion.vae.pt";
-        StableDiffusionTextToImg body = StableDiffusionTextToImg.builder().sampler_name("")
+        TextToImgRequest body = TextToImgRequest.builder().sampler_name("")
                 .prompt("masterpiece, best quality, very detailed, extremely detailed beautiful, super detailed, tousled hair, illustration, dynamic angles, girly, fashion clothing, standing, mannequin, looking at viewer, interview, beach, beautiful detailed eyes, exquisitely beautiful face, floating, high saturation, beautiful and detailed light and shadow")
                 .negative_prompt("loli,nsfw,logo,text,badhandv4,EasyNegative,ng_deepnegative_v1_75t,rev2-badprompt,verybadimagenegative_v1.3,negative_hand-neg,mutated hands and fingers,poorly drawn face,extra limb,missing limb,disconnected limbs,malformed hands,ugly")
                 .sampler_index("DPM++ SDE Karras")
@@ -94,15 +94,15 @@ public class StableDiffusionTest {
         return body;
     }
 
-    private List<String> callSdApi(StableDiffusionTextToImg body) {
+    private List<String> callSdApi(TextToImgRequest body) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<StableDiffusionTextToImg> requestEntity = new HttpEntity<>(body, headers);
+        HttpEntity<TextToImgRequest> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<JSONObject> entity = restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
-        final StableDiffusionTextToImgResponse stableDiffusionTextToImgResponse = handleResponse(entity);
-        final List<String> images = stableDiffusionTextToImgResponse.getImages();
+        final TextToImgResponse textToImgResponse = handleResponse(entity);
+        final List<String> images = textToImgResponse.getImages();
 
         if (CollectionUtils.isEmpty(images)) {
             log.info("empty images");
@@ -112,7 +112,7 @@ public class StableDiffusionTest {
         return images;
     }
 
-    private StableDiffusionTextToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
+    private TextToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
         if (Objects.isNull(response) || !response.getStatusCode().is2xxSuccessful()) {
             log.warn("call stable diffusion api status code: {}", JSONObject.toJSONString(response));
         }
@@ -121,7 +121,7 @@ public class StableDiffusionTest {
         if (Objects.isNull(body)) {
             log.error("send request failed. response body is empty");
         }
-        return body.toJavaObject(StableDiffusionTextToImgResponse.class);
+        return body.toJavaObject(TextToImgResponse.class);
     }
 
 

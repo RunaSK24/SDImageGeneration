@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StableDiffusionTextToImgResponse implements Serializable {
+public class TextToImgResponse implements Serializable {
     /**
      * 生成的图片结果 base64
      */
@@ -21,7 +21,7 @@ public class StableDiffusionTextToImgResponse implements Serializable {
     /**
      * 入参和默认值
      */
-    private StableDiffusionTextToImg parameters;
+    private TextToImgRequest parameters;
 
     /**
      * 参数的组合字符串

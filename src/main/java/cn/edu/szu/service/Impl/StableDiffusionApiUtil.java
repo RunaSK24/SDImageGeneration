@@ -21,7 +21,7 @@ public class StableDiffusionApiUtil {
      * @param prompt
      * @return
      */
-    public static StableDiffusionTextToImg getText2ImageRequestBody(String prompt) {
+    public static TextToImgRequest getText2ImageRequestBody(String prompt) {
         final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
 
         Args args1 = Args.builder()
@@ -63,7 +63,7 @@ public class StableDiffusionApiUtil {
         argsList.add(args2);
 
         String vae = "pastel-waifu-diffusion.vae.pt";
-        StableDiffusionTextToImg body = StableDiffusionTextToImg.builder().sampler_name("")
+        TextToImgRequest body = TextToImgRequest.builder().sampler_name("")
                 .prompt(prompt)
                 .negative_prompt("loli,nsfw,logo,text,badhandv4,EasyNegative,ng_deepnegative_v1_75t,rev2-badprompt,verybadimagenegative_v1.3,negative_hand-neg,mutated hands and fingers,poorly drawn face,extra limb,missing limb,disconnected limbs,malformed hands,ugly")
                 .sampler_index("DPM++ SDE Karras")
@@ -96,23 +96,23 @@ public class StableDiffusionApiUtil {
      * @param body
      * @return
      */
-    public static List<String> callSdApi(StableDiffusionTextToImg body) {
+    public static List<String> callSdApi(TextToImgRequest body) {
         RestTemplate restTemplate = new RestTemplate();
         //定义HTTP请求头
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         //组装请求体
-        HttpEntity<StableDiffusionTextToImg> requestEntity = new HttpEntity<>(body, headers);
+        HttpEntity<TextToImgRequest> requestEntity = new HttpEntity<>(body, headers);
 
         //发送请求
         ResponseEntity<JSONObject> entity = restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
 
         //处理返回消息
-        final StableDiffusionTextToImgResponse stableDiffusionTextToImgResponse = handleResponse(entity);
+        final TextToImgResponse textToImgResponse = handleResponse(entity);
 
         //拿出image的base64数据
-        final List<String> images = stableDiffusionTextToImgResponse.getImages();
+        final List<String> images = textToImgResponse.getImages();
 
         if (CollectionUtils.isEmpty(images)) {
             System.out.println("empty images");
@@ -128,7 +128,7 @@ public class StableDiffusionApiUtil {
      * @param response
      * @return
      */
-    private static StableDiffusionTextToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
+    private static TextToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
         //api调用失败
         if (Objects.isNull(response) || !response.getStatusCode().is2xxSuccessful()) {
             System.out.println("call stable diffusion api status code: " + JSONObject.toJSONString(response));
@@ -142,6 +142,6 @@ public class StableDiffusionApiUtil {
         }
 
         //封装数据
-        return body.toJavaObject(StableDiffusionTextToImgResponse.class);
+        return body.toJavaObject(TextToImgResponse.class);
     }
 }
