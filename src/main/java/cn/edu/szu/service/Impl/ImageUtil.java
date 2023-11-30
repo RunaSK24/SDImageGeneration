@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class ImageUtil {
-    @Value("${imagePath}")
-    private static String imagePath;
-
     /**
      * 图片转Base64字符串
      *
@@ -58,7 +55,8 @@ public class ImageUtil {
      * @param imageFileName 文件储存地址
      */
     public static String convertBase64StrToImage(String base64String, String imageFileName) {
-        imageFileName = imagePath + imageFileName;
+        String filePath = "./src/main/resources/image/" + imageFileName;
+        System.out.println(filePath);
         ByteArrayInputStream bais = null;
         try {
             //获取图片类型
@@ -70,7 +68,7 @@ public class ImageUtil {
             //通过ImageIO把字节数组输入流转为BufferedImage
             BufferedImage bufferedImage = ImageIO.read(bais);
             //构建文件
-            File imageFile = new File(imageFileName);
+            File imageFile = new File(filePath);
             //写入生成文件
             ImageIO.write(bufferedImage, suffix, imageFile);
         } catch (Exception e) {

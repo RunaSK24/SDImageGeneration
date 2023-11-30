@@ -8,5 +8,3 @@ spring:
     url: jdbc:mysql://rm-cn-lbj3hld8l000i6go.rwlb.rds.aliyuncs.com:3306/sd #serviceTimezone=UTC
     username: sd_image_generation
     password: sd1@aliyun
-
-imagePath: ./src/main/resources/image/
