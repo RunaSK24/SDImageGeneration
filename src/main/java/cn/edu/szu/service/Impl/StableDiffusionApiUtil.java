@@ -14,12 +14,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class StableDiffusionApiUtil {
-
     /**
      * 拼接TextToImg请求体
      *
-     * @param prompt
-     * @return
+     * @param prompt 引导词
+     * @return TextToImg请求体
      */
     public static TextToImgRequest getText2ImageRequestBody(String prompt) {
         final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
@@ -93,8 +92,8 @@ public class StableDiffusionApiUtil {
     /**
      * 拼接ImgToImg请求体
      *
-     * @param filePath String
-     * @return
+     * @param filePath 文件地址
+     * @return ImgToImg请求体
      */
     public static ImgToImgRequest getImg2ImageRequestBody(String filePath) {
         final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
@@ -170,8 +169,8 @@ public class StableDiffusionApiUtil {
     /**
      * 调用SD的文生图api
      *
-     * @param body
-     * @return
+     * @param body TextToImg请求体
+     * @return List<String>生成的图片集合（base64格式）
      */
     public static List<String> callSdTextToImgApi(TextToImgRequest body) {
         RestTemplate restTemplate = new RestTemplate();
@@ -184,7 +183,7 @@ public class StableDiffusionApiUtil {
 
         //发送请求
         ResponseEntity<JSONObject> entity =
-                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/text2img", requestEntity, JSONObject.class);
+                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
 
         //处理返回消息
         final ToImgResponse toImgResponse = handleResponse(entity);
@@ -203,8 +202,8 @@ public class StableDiffusionApiUtil {
     /**
      * 调用SD的图生图api
      *
-     * @param body
-     * @return
+     * @param body ImgToImg请求体
+     * @return List<String>生成的图片集合（base64格式）
      */
     public static List<String> callSdImgToImgApi(ImgToImgRequest body) {
         RestTemplate restTemplate = new RestTemplate();
@@ -234,10 +233,10 @@ public class StableDiffusionApiUtil {
     }
 
     /**
-     * 处理返回值，封装成对象
+     * 处理返回值，封装成ToImgResponse对象
      *
-     * @param response
-     * @return
+     * @param response 返回的json数据
+     * @return 按照格式封装后的json数据
      */
     private static ToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
         //api调用失败

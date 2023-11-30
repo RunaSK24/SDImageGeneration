@@ -16,7 +16,7 @@ public class ImageServiceImpl implements ImageService {
         TextToImgRequest body = StableDiffusionApiUtil.getText2ImageRequestBody(prompt);
         final List<String> images = StableDiffusionApiUtil.callSdTextToImgApi(body);
         for (String image : images) {
-            path = ImageUtil.convertBase64StrToImage(image, String.format("./src/main/resources/image/%s.png", UUID.randomUUID().toString().replaceAll("-", "")));
+            path = ImageUtil.convertBase64StrToImage(image, String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", "")));
         }
 
         return path;
@@ -28,7 +28,7 @@ public class ImageServiceImpl implements ImageService {
         ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(imagePath);
         final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
         for (String image : images) {
-            path = ImageUtil.convertBase64StrToImage(image, String.format("./src/main/resources/image/%s.png", UUID.randomUUID().toString().replaceAll("-", "")));
+            path = ImageUtil.convertBase64StrToImage(image, String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", "")));
         }
 
         return path;

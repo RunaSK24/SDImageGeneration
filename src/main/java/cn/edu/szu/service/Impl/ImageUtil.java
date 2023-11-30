@@ -1,5 +1,7 @@
 package cn.edu.szu.service.Impl;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -9,12 +11,14 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class ImageUtil {
+    @Value("${imagePath}")
+    private static String imagePath;
 
     /**
      * 图片转Base64字符串
      *
-     * @param imageFileName
-     * @return
+     * @param imageFileName 文件地址
+     * @return String Base64图片代码
      */
     public static String convertImageToBase64Str(String imageFileName) {
         ByteArrayOutputStream baos = null;
@@ -50,11 +54,11 @@ public class ImageUtil {
     /**
      * Base64字符串转图片
      *
-     * @param base64String
-     * @param imageFileName
+     * @param base64String Base64代码
+     * @param imageFileName 文件储存地址
      */
     public static String convertBase64StrToImage(String base64String, String imageFileName) {
-        String filePath = "";
+        imageFileName = imagePath + imageFileName;
         ByteArrayInputStream bais = null;
         try {
             //获取图片类型
@@ -67,8 +71,6 @@ public class ImageUtil {
             BufferedImage bufferedImage = ImageIO.read(bais);
             //构建文件
             File imageFile = new File(imageFileName);
-            //保存图片地址
-            filePath = imageFile.getAbsolutePath();
             //写入生成文件
             ImageIO.write(bufferedImage, suffix, imageFile);
         } catch (Exception e) {
@@ -82,7 +84,6 @@ public class ImageUtil {
                 e.printStackTrace();
             }
         }
-        return filePath;
+        return imageFileName;
     }
-
 }
