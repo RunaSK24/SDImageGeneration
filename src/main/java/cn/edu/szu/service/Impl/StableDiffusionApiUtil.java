@@ -16,7 +16,7 @@ import java.util.Objects;
 public class StableDiffusionApiUtil {
 
     /**
-     * 拼接请求体
+     * 拼接TextToImg请求体
      *
      * @param prompt
      * @return
@@ -91,12 +91,89 @@ public class StableDiffusionApiUtil {
     }
 
     /**
-     * 调用SD的api
+     * 拼接ImgToImg请求体
+     *
+     * @param filePath String
+     * @return
+     */
+    public static ImgToImgRequest getImg2ImageRequestBody(String filePath) {
+        final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
+
+        Args args1 = Args.builder()
+                .enabled(true)
+                .control_mode(0)
+                .guidance_start(0)
+                .guidance_end(0.5)
+                .weight(0.3)
+                .pixel_perfect(true)
+                .resize_mode(1)
+                .model("control_v11p_sd15_softedge [a8575a2a]")
+                .module("softedge_pidinet")
+                .input_image(base64SrcImg)
+                .lowvram(false)
+                .processor_res(0)
+                .threshold_a(0)
+                .threshold_b(0)
+                .build();
+
+        Args args2 = Args.builder()
+                .enabled(true)
+                .control_mode(0)
+                .guidance_start(0)
+                .guidance_end(0.5)
+                .weight(0.75)
+                .pixel_perfect(true)
+                .resize_mode(1)
+                .model("control_v11f1p_sd15_depth [cfd03158]")
+                .module("depth_midas")
+                .input_image(base64SrcImg)
+                .lowvram(false)
+                .processor_res(0)
+                .threshold_a(0)
+                .threshold_b(0)
+                .build();
+
+        List<Args> argsList = new ArrayList<>();
+        argsList.add(args1);
+        argsList.add(args2);
+        String vae = "pastel-waifu-diffusion.vae.pt";
+        List<String> images = new ArrayList<>();
+        images.add(ImageUtil.convertImageToBase64Str(filePath));
+        ImgToImgRequest body = ImgToImgRequest.builder().sampler_name("")
+                .prompt("")
+                .negative_prompt("nsfw,logo,text,badhandv4,EasyNegative,ng_deepnegative_v1_75t,rev2-badprompt,verybadimagenegative_v1.3,negative_hand-neg,mutated hands and fingers,poorly drawn face,extra limb,missing limb,disconnected limbs,malformed hands,ugly")
+                .sampler_index("DPM++ SDE Karras")
+                .seed(-1)
+                .width(512)
+                .height(512)
+                .restore_faces(false)
+                .tiling(false)
+                .batch_size(1)
+                .script_args(new ArrayList<>())
+                .alwayson_scripts(AlwaysonScripts.builder()
+                        .controlnet(ControlNet.builder()
+                                .args(argsList)
+                                .build())
+                        .build())
+                .steps(28)
+                .override_settings(OverrideSettings.builder()
+                        .sd_model_checkpoint("chosenMix_chosenMix.ckpt [dd0aacadb6]")
+                        .sd_vae(vae)
+                        .build())
+                .cfg_scale(7.0)
+                .include_init_images(true)
+                .init_images(images)
+                .build();
+        return body;
+    }
+
+    /**
+     * 调用SD的文生图api
      *
      * @param body
      * @return
      */
-    public static List<String> callSdApi(TextToImgRequest body) {
+    public static List<String> callSdTextToImgApi(TextToImgRequest body) {
         RestTemplate restTemplate = new RestTemplate();
         //定义HTTP请求头
         HttpHeaders headers = new HttpHeaders();
@@ -107,13 +184,46 @@ public class StableDiffusionApiUtil {
 
         //发送请求
         ResponseEntity<JSONObject> entity =
-                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
+                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/text2img", requestEntity, JSONObject.class);
 
         //处理返回消息
-        final TextToImgResponse textToImgResponse = handleResponse(entity);
+        final ToImgResponse toImgResponse = handleResponse(entity);
 
         //拿出image的base64数据
-        final List<String> images = textToImgResponse.getImages();
+        final List<String> images = toImgResponse.getImages();
+
+        if (CollectionUtils.isEmpty(images)) {
+            System.out.println("empty images");
+            return new ArrayList<>();
+        }
+
+        return images;
+    }
+
+    /**
+     * 调用SD的图生图api
+     *
+     * @param body
+     * @return
+     */
+    public static List<String> callSdImgToImgApi(ImgToImgRequest body) {
+        RestTemplate restTemplate = new RestTemplate();
+        //定义HTTP请求头
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        //组装请求体
+        HttpEntity<ImgToImgRequest> requestEntity = new HttpEntity<>(body, headers);
+
+        //发送请求
+        ResponseEntity<JSONObject> entity =
+                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/img2img", requestEntity, JSONObject.class);
+
+        //处理返回消息
+        final ToImgResponse toImgResponse = handleResponse(entity);
+
+        //拿出image的base64数据
+        final List<String> images = toImgResponse.getImages();
 
         if (CollectionUtils.isEmpty(images)) {
             System.out.println("empty images");
@@ -129,7 +239,7 @@ public class StableDiffusionApiUtil {
      * @param response
      * @return
      */
-    private static TextToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
+    private static ToImgResponse handleResponse(ResponseEntity<JSONObject> response) {
         //api调用失败
         if (Objects.isNull(response) || !response.getStatusCode().is2xxSuccessful()) {
             System.out.println("call stable diffusion api status code: " + JSONObject.toJSONString(response));
@@ -143,6 +253,6 @@ public class StableDiffusionApiUtil {
         }
 
         //封装数据
-        return body.toJavaObject(TextToImgResponse.class);
+        return body.toJavaObject(ToImgResponse.class);
     }
 }

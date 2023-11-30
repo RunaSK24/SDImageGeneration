@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TextToImgResponse implements Serializable {
+public class ToImgResponse implements Serializable {
     /**
      * 生成的图片结果 base64
      */

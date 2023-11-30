@@ -15,4 +15,10 @@ public class ImageController {
         System.out.println("prompt: " + prompt);
         return imageService.textToImage(prompt);
     }
+
+    @PostMapping
+    private String imageToImage(@RequestParam String path){
+        System.out.println("path: " + path);
+        return imageService.imageToImage(path);
+    }
 }
