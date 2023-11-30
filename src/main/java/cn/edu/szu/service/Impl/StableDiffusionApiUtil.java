@@ -106,7 +106,8 @@ public class StableDiffusionApiUtil {
         HttpEntity<TextToImgRequest> requestEntity = new HttpEntity<>(body, headers);
 
         //发送请求
-        ResponseEntity<JSONObject> entity = restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
+        ResponseEntity<JSONObject> entity =
+                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
 
         //处理返回消息
         final TextToImgResponse textToImgResponse = handleResponse(entity);
