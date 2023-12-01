@@ -40,9 +40,5 @@ public class UserController {
             code = Code.USER_CHECK_ERR;
         }
         return new Result(code,null,msg.toString());
-
     }
-
-
-
 }

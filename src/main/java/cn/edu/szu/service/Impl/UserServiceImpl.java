@@ -41,5 +41,4 @@ public class UserServiceImpl implements UserService {
         return pass2.equals(pass1);
 
     }
-
 }

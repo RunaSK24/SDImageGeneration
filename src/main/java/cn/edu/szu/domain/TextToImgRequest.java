@@ -39,18 +39,21 @@ public class TextToImgRequest implements Serializable {
     private Integer width;
 
     /**
-     * 反向提示词, 默认 ""
+     * 正向提示词
+     */
+    private String prompt;
+
+    /**
+     * 反向提示词
      */
     private String negative_prompt;
 
     /**
-     * 默认 null
+     * 拓展设置
      */
     private OverrideSettings override_settings;
 
     private Integer clip_skip;
-
-    private String prompt;
 
     /**
      * 面部修复, 默认 false
@@ -80,7 +83,7 @@ public class TextToImgRequest implements Serializable {
     private Integer steps;
 
     /**
-     * 平铺图 默认 false
+     * 平铺图
      */
     private Boolean tiling;
 }
