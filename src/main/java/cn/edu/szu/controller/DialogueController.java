@@ -30,7 +30,7 @@ public class DialogueController {
         return new Result(code ,dialogue ,msg);
     }
     @GetMapping("/{id}")
-    public Result getUsersDialogue(Integer id){
+    public Result getUsersDialogue(@PathVariable Integer id){
         List<Dialogue> dialogueList = dialogueService.selectByUserId(id);
         Integer code;
         String msg;
@@ -80,10 +80,10 @@ public class DialogueController {
         String msg;
         if(len > 0){
             code = Code.DELETE_OK;
-            msg = "Update Success";
+            msg = "Delete Success";
         }else {
             code = Code.DELETE_ERR;
-            msg = "Update ERROR";
+            msg = "Delete ERROR";
         }
         return new Result(code,null,msg);
 

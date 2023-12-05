@@ -14,7 +14,7 @@ public class DialogueTest {
     public void insertDialogue(){
         Dialogue dialogue = new Dialogue();
         dialogue.setUid(3);
-        dialogue.setDid(3);
+        dialogue.setDid(5);
         dialogue.setDialogueSource("dialogue");
         dialogueService.insertDialogue(dialogue);
 

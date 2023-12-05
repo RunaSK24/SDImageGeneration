@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <title>SD图生文</title>
+    <link rel="stylesheet" href="../css/Main.css">
+    <link rel="stylesheet" href="../css/PopWindow.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-box">
+            <ul id="list">
+                <hr>
+                <li class="item" id="newDialog">
+                    新建对话
+                </li>
+            </ul>
+            <div class="user-info">
+                <img src="../images/people.jpg" alt="">
+                <span>zgr</span>
+            </div>
+        </div>
+
+        <div class="right-box">
+            <div class="handler"></div>
+            <div id="Dialog">
+                <div class="chat-container"></div>
+                <div class="chat-input">
+                    <img src="../images/clear.png" alt="图片" onclick="clearChat()"
+                        style="border-radius: 50%; height: 30px; width: 30px;margin-right: 10px">
+                    <input type="text" placeholder="Type a message">
+                    <input type="file" id="image-input" style="display: none;">
+                    <button id="add-image">image</button>
+                    <button id="send">Send</button>
+                    <!--回复功能测试-->
+                    <!-- <button id="answer">reply</button> -->
+                    <!--读取文件功能测试-->
+                    <!-- <input type="file" id="fileInput"> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <h2>新建对话</h2>
+            <p>即将为您新建一个对话</p>
+            <button id="closeModal">确认</button>
+        </div>
+    </div>
+
+    <script src="../js/LeftSide.js"></script>
+    <script src="../js/DialogList.js"></script>
+    <script src="../js/Dialogue.js"></script>
+    <script src="../js/PopWindow.js"></script>
+    <script src="../js/ClearWindow.js"></script>
+    <script src="../js/History.js"></script>
+    <script src="../js/History2.js"></script>
+</body>
+
+</html>

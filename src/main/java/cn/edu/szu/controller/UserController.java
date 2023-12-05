@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -21,6 +23,7 @@ public class UserController {
     }
     @PostMapping
     public Result saveUser(@RequestBody User user){
+        System.out.println(user);
         int check = userService.save(user);
         boolean res = check > 0;
         Integer code = check > 0?Code.SAVE_OK : Code.SAVE_ERR;
@@ -41,4 +44,5 @@ public class UserController {
         }
         return new Result(code,null,msg.toString());
     }
+
 }

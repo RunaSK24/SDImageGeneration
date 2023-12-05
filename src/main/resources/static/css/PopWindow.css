@@ -1,0 +1,36 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background: linear-gradient(200deg, #e3c5eb, #a9c1ed);
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 400px;
+}
+
+
+#closeModal {
+    background: linear-gradient(200deg, #e3c5eb, #a9c1ed);
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+#closeModal:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

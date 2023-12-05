@@ -8,9 +8,11 @@ import java.util.List;
 @Mapper
 public interface DialogueDao {
 
-    @Insert("INSERT INTO dialogue (uid, did, dialogueSource) VALUES (#{uid}, #{did}, #{dialogueSource})")
+    @Insert("INSERT INTO dialogue (uid, did, dialogueSource) " +
+            "VALUES (#{uid}, #{did}, #{dialogueSource})")
     int insertDialogue(Dialogue dialogue);
-    @Update("UPDATE dialogue SET dialogueSource = #{dialogueSource} WHERE uid = #{uid} AND did = #{did}")
+    @Update("UPDATE dialogue SET dialogueSource = #{dialogueSource} " +
+            "WHERE uid = #{uid} AND did = #{did}")
     int updateDialogue(Dialogue dialogue);
 
     @Select("select * from dialogue where uid = #{id}")

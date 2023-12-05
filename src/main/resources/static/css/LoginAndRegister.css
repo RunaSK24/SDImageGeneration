@@ -1,0 +1,307 @@
+* {
+    /* 初始化 */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    /* 100%窗口高度 */
+    height: 100vh;
+    /* 弹性布局 居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 渐变背景 */
+    background: linear-gradient(200deg, #e3c5eb, #a9c1ed);
+    /* 溢出隐藏 */
+    overflow: hidden;
+}
+
+.container {
+    /* 颜色 */
+    background-color: #fff;
+    /* 大小 */
+    width: 650px;
+    height: 415px;
+    border-radius: 5px;
+    /* 阴影 */
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+    /* 相对定位 */
+    position: relative;
+    /* 图层 */
+    z-index: 3;
+}
+
+.form-box {
+    /* 绝对定位 */
+    position: absolute;
+    top: -10%;
+    left: 5%;
+    /* 矩形颜色 大小 */
+    background-color: #d3b7d8;
+    width: 320px;
+    height: 500px;
+    border-radius: 5px;
+    /* 阴影 */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 层级 */
+    z-index: 2;
+    /* 动画过渡 加速后减速 */
+    transition: 0.5s ease-in-out;
+}
+
+/* 登录或注册布局和位置 */
+.register-box,
+.login-box {
+    /* 弹性布局 */
+    display: flex;
+    /* 垂直排列 */
+    flex-direction: column;
+    /* 在from-box里居中放置 */
+    align-items: center;
+    width: 100%;
+}
+
+/* 隐藏登录或注册 */
+.hidden {
+    display: none;
+    transition: 0.5s;
+}
+
+/* Login和Register标题文字样式 */
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    /* 大写 */
+    text-transform: uppercase;
+    color: #fff;
+    /* 字间距 */
+    letter-spacing: 5px;
+}
+
+/* 输入框的样式 */
+input {
+    background-color: transparent;
+    width: 70%;
+    color: #fff;
+    border: none;
+    /* 下边框样式 */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 10px 0;
+    text-indent: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+/* 输入框中文字样式 */
+input::placeholder {
+    color: #fff;
+}
+
+/* 被选中后输入框的样式 */
+input:focus {
+    color: #a262ad;
+    outline: none;
+    border-bottom: 1px solid #a262ad80;
+    transition: 0.5s;
+}
+
+/* 被选中后输入框中文字的样式 */
+input:focus::placeholder {
+    opacity: 0;
+}
+
+/* 按钮样式 */
+.form-box button {
+    width: 70%;
+    margin-top: 35px;
+    background-color: #f6f6f6;
+    outline: none;
+    border-radius: 8px;
+    padding: 13px;
+    color: #a262ad;
+    letter-spacing: 2px;
+    border: none;
+    cursor: pointer;
+}
+
+/* 鼠标悬停后按钮的样式 */
+.form-box button:hover {
+    background-color: #a262ad;
+    color: #f6f6f6;
+    transition: background-color 0.5s ease;
+}
+
+/* 背景介绍区域设置 */
+.con-box {
+    width: 50%;
+    /* 弹性布局 垂直排列 居中 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* 绝对定位 居中 */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* 左边界 */
+.con-box.left {
+    left: -2%;
+}
+
+/* 右边界 */
+.con-box.right {
+    right: -2%;
+}
+
+/* 大文字 */
+.con-box h2 {
+    color: #8e9aaf;
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+/* 小文字 */
+.con-box p {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #8e9aaf;
+    text-align: center;
+}
+
+/* 小文字中部分不同颜色的文字（用于突出显示） */
+.con-box span {
+    color: #d3b7d8;
+}
+
+/* 图片 */
+.con-box img {
+    width: 150px;
+    height: 150px;
+    opacity: 0.9;
+    /* 圆形 */
+    margin: 40px 0;
+}
+
+/* 去注册和去登录按钮 */
+.con-box button {
+    margin-top: 3%;
+    background-color: #fff;
+    color: #a262ad;
+    border: 1px solid #d3b7d8;
+    padding: 6px 10px;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    outline: none;
+    cursor: pointer;
+}
+/* 按钮选中样式 */
+.con-box button:hover {
+    background-color: #d3b7d8;
+    color: #fff;
+}
+
+/* 背景动态图案初始样式 */
+ul li {
+    position: absolute;
+    border: 1px solid #fff;
+    background-color: #fff;
+    width: 30px;
+    height: 30px;
+    list-style: none;
+    opacity: 0;
+    z-index: 1;
+}
+
+.square li {
+    top: 40vh;
+    left: 60vw;
+    /* 执行动画：动画名 时长 线性的 无限次播放 */
+    animation: square 10s linear infinite;
+}
+.square li:nth-child(2) {
+    top: 80vh;
+    left: 10vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 2s;
+}
+.square li:nth-child(3) {
+    top: 80vh;
+    left: 85vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 4s;
+}
+.square li:nth-child(4) {
+    top: 10vh;
+    left: 70vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 6s;
+}
+.square li:nth-child(5) {
+    top: 10vh;
+    left: 10vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 8s;
+}
+
+.circle li {
+    bottom: 0;
+    left: 15vw;
+    /* 执行动画 */
+    animation: circle 10s linear infinite;
+}
+.circle li:nth-child(2) {
+    left: 35vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 2s;
+}
+.circle li:nth-child(3) {
+    left: 55vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 6s;
+}
+.circle li:nth-child(4) {
+    left: 75vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 4s;
+}
+.circle li:nth-child(5) {
+    left: 90vw;
+    /* 设置动画延迟时间 */
+    animation-delay: 8s;
+}
+
+/* 定义动画 */
+@keyframes square {
+    0% {
+        transform: scale(0) rotateY(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(5) rotateY(1000deg);
+        opacity: 0;
+    }
+}
+@keyframes circle {
+    0% {
+        transform: scale(0) rotateY(0deg);
+        opacity: 1;
+        bottom: 0;
+        border-radius: 0;
+    }
+    100% {
+        transform: scale(5) rotateY(1000deg);
+        opacity: 0;
+        bottom: 90vh;
+        border-radius: 50%;
+    }
+}
