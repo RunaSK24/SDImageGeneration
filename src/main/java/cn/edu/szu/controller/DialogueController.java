@@ -130,7 +130,7 @@ public class DialogueController {
 
     @PostMapping("/storeImageMsg")//前端发送请求，将历史记录存储在本地
     public Result imageToImage(@RequestBody Message msg) {
-        System.out.println("收到消息：" + msg);
+        //System.out.println("收到消息：" + msg);
         String base64 = dialogueService.imageToImage(msg);
         Integer code;
         String mes;
@@ -147,7 +147,7 @@ public class DialogueController {
 
     @GetMapping("/Image/{fileName}")
     public Result getImage(@PathVariable String fileName){
-        //System.out.println("获取图片" + fileName);
+        System.out.println("获取图片" + fileName);
         String base64 = dialogueService.getImage(fileName);
 
         Integer code;
