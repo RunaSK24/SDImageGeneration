@@ -16,7 +16,9 @@ public interface DialogueService {
 
     int delete(Long uid, Long did);
 
-    boolean loadLocal(Message msg);
+    String textToImage(Message msg);
+
+    String imageToImage(Message msg);
 
     String ReadFile(String source);
 

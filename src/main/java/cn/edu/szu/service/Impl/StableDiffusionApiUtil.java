@@ -92,10 +92,10 @@ public class StableDiffusionApiUtil {
     /**
      * 拼接ImgToImg请求体
      *
-     * @param filePath 文件地址
+     * @param image base64图片数据
      * @return ImgToImg请求体
      */
-    public static ImgToImgRequest getImg2ImageRequestBody(String filePath) {
+    public static ImgToImgRequest getImg2ImageRequestBody(String image) {
         final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
 
         Args args1 = Args.builder()
@@ -137,7 +137,7 @@ public class StableDiffusionApiUtil {
         argsList.add(args2);
         String vae = "pastel-waifu-diffusion.vae.pt";
         List<String> images = new ArrayList<>();
-        images.add(ImageUtil.convertImageToBase64Str(filePath));
+        images.add(image);
         ImgToImgRequest body = ImgToImgRequest.builder().sampler_name("")
                 .prompt("")
                 .negative_prompt("nsfw,logo,text,badhandv4,EasyNegative,ng_deepnegative_v1_75t,rev2-badprompt,verybadimagenegative_v1.3,negative_hand-neg,mutated hands and fingers,poorly drawn face,extra limb,missing limb,disconnected limbs,malformed hands,ugly")

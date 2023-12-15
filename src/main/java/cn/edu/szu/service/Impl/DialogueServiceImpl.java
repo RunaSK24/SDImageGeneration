@@ -2,6 +2,7 @@ package cn.edu.szu.service.Impl;
 
 import cn.edu.szu.dao.DialogueDao;
 import cn.edu.szu.domain.Dialogue;
+import cn.edu.szu.domain.ImgToImgRequest;
 import cn.edu.szu.domain.Message;
 import cn.edu.szu.domain.TextToImgRequest;
 import cn.edu.szu.service.DialogueService;
@@ -57,27 +58,56 @@ public class DialogueServiceImpl implements DialogueService {
      * @return
      */
     @Override
-    public boolean loadLocal(Message msg) {
+    public String textToImage(Message msg) {
+        String result = "";
         //保存消息到历史记录
         Dialogue dialogue = dialogueDao.selectByIds(msg.getUid(), msg.getDid());
         String src = dialogue.getDialogueSource();
         boolean saveCheck = loadLocalFile(msg.getMessage(), src, "User");
-        if (!saveCheck) return false;
+        if (!saveCheck) return null;
 
-        //TODO 调用方法生成图片，写入记录文件
         //调用api进行文生图
         String fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
         TextToImgRequest body = StableDiffusionApiUtil.getText2ImageRequestBody(msg.getMessage());
         final List<String> images = StableDiffusionApiUtil.callSdTextToImgApi(body);
         for (String image : images) {
+            result = image;
             ImageUtil.convertBase64StrToImage(image, fileName);
         }
 
         //保存生成的图片到消息记录
         saveCheck = loadLocalFile("imageSource:" + fileName, src, "Bot");
-        if (!saveCheck) return false;
+        if (!saveCheck) return null;
 
-        return true;
+        return result;
+    }
+
+    @Override
+    public String imageToImage(Message msg) {
+        String result = "";
+        //保存用户输入的图片
+        String fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
+        ImageUtil.convertBase64StrToImage(msg.getMessage(), fileName);
+        //保存消息记录
+        Dialogue dialogue = dialogueDao.selectByIds(msg.getUid(), msg.getDid());
+        String src = dialogue.getDialogueSource();
+        boolean saveCheck = loadLocalFile("imageSource:" + fileName, src, "User");
+        if (!saveCheck) return null;
+
+        //进行图生图
+        fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
+        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(msg.getMessage());
+        final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
+        for (String image : images) {
+            result = image;
+            ImageUtil.convertBase64StrToImage(image,fileName);
+        }
+
+        //保存生成的图片到消息记录
+        saveCheck = loadLocalFile("imageSource:" + fileName, src, "Bot");
+        if (!saveCheck) return null;
+
+        return result;
     }
 
     /**

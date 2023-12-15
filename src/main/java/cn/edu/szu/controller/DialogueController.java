@@ -112,12 +112,12 @@ public class DialogueController {
     }
 
     @PostMapping("/storeTextMsg")//前端发送请求，将历史记录存储在本地
-    public Result storeMsg(@RequestBody Message msg) {
+    public Result textToImage(@RequestBody Message msg) {
         System.out.println("收到消息：" + msg);
-        boolean check = dialogueService.loadLocal(msg);
+        String base64 = dialogueService.textToImage(msg);
         Integer code;
         String mes;
-        if (check) {
+        if (base64 != null) {
             code = Code.HIS_LOAD_OK;
             mes = "LOAD_SUCCESS";
         } else {
@@ -125,16 +125,16 @@ public class DialogueController {
             mes = "LOAD_ERR";
         }
 
-        return new Result(code, null, mes);
+        return new Result(code, base64, mes);
     }
 
     @PostMapping("/storeImageMsg")//前端发送请求，将历史记录存储在本地
-    public Result storeImage(@RequestBody Message msg) {
-        //System.out.println("收到消息：" + msg);
-        boolean check = true;
+    public Result imageToImage(@RequestBody Message msg) {
+        System.out.println("收到消息：" + msg);
+        String base64 = dialogueService.imageToImage(msg);
         Integer code;
         String mes;
-        if (check) {
+        if (base64 != null) {
             code = Code.HIS_LOAD_OK;
             mes = "LOAD_SUCCESS";
         } else {
@@ -142,11 +142,12 @@ public class DialogueController {
             mes = "LOAD_ERR";
         }
 
-        return new Result(code, null, mes);
+        return new Result(code, base64, mes);
     }
 
     @GetMapping("/Image/{fileName}")
     public Result getImage(@PathVariable String fileName){
+        //System.out.println("获取图片" + fileName);
         String base64 = dialogueService.getImage(fileName);
 
         Integer code;
