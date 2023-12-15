@@ -16,7 +16,7 @@ public class PictureController {
     private PictureDao picDao;
 
     @GetMapping("/{uid}/{did}")//获取对话所有图片
-    public Result selectByDialog(@PathVariable Integer uid,@PathVariable Integer did){
+    public Result selectByDialog(@PathVariable Long uid,@PathVariable Long did){
         List<Picture>picList = picDao.selectByDialog(uid, did);
         Integer code;
         String msg;
@@ -31,7 +31,7 @@ public class PictureController {
     }
 
     @GetMapping("/{uid}/{did}/{pid}")//获取指定的唯一图片
-    public Result selectByPic(@PathVariable Integer uid,@PathVariable Integer did,@PathVariable Integer pid){
+    public Result selectByPic(@PathVariable Long uid,@PathVariable Long did,@PathVariable Long pid){
         Picture pic = picDao.selectByPic(uid, did,pid);
         Integer code;
         String msg;
@@ -76,7 +76,7 @@ public class PictureController {
     }
 
     @DeleteMapping("/{uid}/{did}/{pid}")
-    public Result deletePic(@PathVariable Integer uid,@PathVariable Integer did,@PathVariable Integer pid){
+    public Result deletePic(@PathVariable Long uid,@PathVariable Long did,@PathVariable Long pid){
         int len = picDao.deletePic(uid, did, pid);
         int code;
         String msg;

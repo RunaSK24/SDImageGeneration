@@ -13,8 +13,8 @@ public class DialogueTest {
     @Test
     public void insertDialogue(){
         Dialogue dialogue = new Dialogue();
-        dialogue.setUid(3);
-        dialogue.setDid(5);
+        dialogue.setUid(3L);
+        dialogue.setDid(5L);
         dialogue.setDialogueSource("dialogue");
         dialogueService.insertDialogue(dialogue);
 
@@ -22,28 +22,30 @@ public class DialogueTest {
     @Test
     public void updateDialogue(){
         Dialogue dialogue = new Dialogue();
-        dialogue.setUid(3);
-        dialogue.setDid(2);
+        dialogue.setUid(3L);
+        dialogue.setDid(2L);
         dialogue.setDialogueSource("update source");
         dialogueService.updateDialogue(dialogue);
     }
     @Test
     public void selectByUserId(){
-        System.out.println(dialogueService.selectByUserId(3));
+        System.out.println(dialogueService.selectByUserId(3L));
+        System.out.println(dialogueService.ReadFile("./src/main/resources/history/file_1701328704148.txt"));
+
     }
 
     @Test
     public void selectByIds(){
-        System.out.println(dialogueService.selectByIds(3,1));
+        System.out.println(dialogueService.selectByIds(3L,1702629678137L));
     }
     @Test
     public void delete(){
-        System.out.println(dialogueService.delete(3,1));
+        System.out.println(dialogueService.delete(3L,1L));
     }
     @Test
     public void load(){
         for (int i = 0 ;i < 10;i++){
-            boolean check = dialogueService.loadLocal("777",3,3);
+            boolean check = dialogueService.loadLocal("777",3L,3L,"User");
         }
 
 

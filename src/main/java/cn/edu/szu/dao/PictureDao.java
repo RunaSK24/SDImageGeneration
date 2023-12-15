@@ -17,10 +17,10 @@ public interface PictureDao {
     int updatePic(Picture picture);
 
     @Select("SELECT * from picture where uid = #{uid} and did = #{did}")
-    List<Picture> selectByDialog(Integer uid,Integer did);
+    List<Picture> selectByDialog(Long uid,Long did);
     @Select("SELECT * from picture where uid = #{uid} and did = #{did} and pid = #{pid}")
-    Picture selectByPic(Integer uid,Integer did,Integer pid);
+    Picture selectByPic(Long uid,Long did,Long pid);
     @Delete("delete from picture where  uid = #{uid} and did = #{did} and pid = #{pid} ")
-    int deletePic(Integer uid,Integer did,Integer pid);
+    int deletePic(Long uid,Long did,Long pid);
 
 }

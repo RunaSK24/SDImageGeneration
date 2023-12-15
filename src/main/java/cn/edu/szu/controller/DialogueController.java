@@ -16,7 +16,7 @@ public class DialogueController {
 
 //根据userId和DialogueId查找唯一Dia
     @GetMapping("/{uid}/{did}")
-    public Result getDiaByIds(@PathVariable Integer uid,@PathVariable Integer did){
+    public Result getDiaByIds(@PathVariable Long uid,@PathVariable Long did){
         Dialogue dialogue = dialogueService.selectByIds(uid,did);
         Integer code;
         String msg;
@@ -29,8 +29,10 @@ public class DialogueController {
         }
         return new Result(code ,dialogue ,msg);
     }
+//    获取用户对话列表
     @GetMapping("/{id}")
-    public Result getUsersDialogue(@PathVariable Integer id){
+    public Result getUsersDialogue(@PathVariable Long id){
+        System.out.println(id+"  !!");
         List<Dialogue> dialogueList = dialogueService.selectByUserId(id);
         Integer code;
         String msg;
@@ -42,10 +44,27 @@ public class DialogueController {
             msg = "成功";
         }
         return new Result(code ,dialogueList ,msg);
-
     }
+//读取文件(历史记录)
+    @GetMapping("/fileRead/{src}")
+    public Result ReadFile(@PathVariable String src){
+        src = "./src/main/resources/history/"+src;
+        String res = dialogueService.ReadFile(src);
+        Integer code;
+        String msg;
+        if (res.equals("") || res == null){
+            code = Code.GET_ERR;
+            msg = "不存在对话";
+        }else {
+            code = Code.GET_OK;
+            msg = "成功";
+        }
+        return new Result(code ,res ,msg);
+    }
+
     @PostMapping
     public Result saveDia(@RequestBody Dialogue dialogue){
+        dialogue.setDid(System.currentTimeMillis());
         int len = dialogueService.insertDialogue(dialogue);
         int code;
         String msg;
@@ -74,7 +93,7 @@ public class DialogueController {
     }
 
     @DeleteMapping("/{uid}/{did}")
-    public Result deleteDia(@PathVariable Integer uid,@PathVariable Integer did){
+    public Result deleteDia(@PathVariable Long uid,@PathVariable Long did){
         int len = dialogueService.delete(uid, did);
         int code;
         String msg;
@@ -90,8 +109,8 @@ public class DialogueController {
     }
 
     @PostMapping("/storeMsg/{msg}/{uid}/{did}")//前端发送请求，将历史记录存储在本地
-    public Result storeMsg(@PathVariable String msg ,@PathVariable Integer uid,@PathVariable Integer did){
-        boolean check = dialogueService.loadLocal(msg, uid, did);
+    public Result storeMsg(@PathVariable String msg ,@PathVariable Long uid,@PathVariable Long did){
+        boolean check = dialogueService.loadLocal(msg, uid, did,"User");
         Integer code;
         String mes;
         if (check){

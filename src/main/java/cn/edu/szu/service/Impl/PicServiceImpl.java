@@ -23,17 +23,17 @@ public class PicServiceImpl implements PicService {
     }
 
     @Override
-    public List<Picture> selectByDia(Integer uid, Integer did) {
+    public List<Picture> selectByDia(Long uid, Long did) {
         return pictureDao.selectByDialog(uid,did);
     }
 
     @Override
-    public Picture selectByPic(Integer uid, Integer did, Integer pid) {
+    public Picture selectByPic(Long uid, Long did, Long pid) {
         return pictureDao.selectByPic(uid,did,pid);
     }
 
     @Override
-    public int deletePic(Integer uid, Integer did, Integer pid) {
+    public int deletePic(Long uid, Long did, Long pid) {
         return pictureDao.deletePic(uid,did,pid);
     }
 }

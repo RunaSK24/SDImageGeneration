@@ -16,12 +16,12 @@ public interface DialogueDao {
     int updateDialogue(Dialogue dialogue);
 
     @Select("select * from dialogue where uid = #{id}")
-    List<Dialogue> selectByUserId(Integer id);
+    List<Dialogue> selectByUserId(Long id);
     @Select("select * from  dialogue where uid = #{uid} and did = #{did}")
-    Dialogue selectByIds(Integer uid,Integer did);
+    Dialogue selectByIds(Long uid,Long did);
 
     @Delete("delete from dialogue where uid = #{uid} and did = #{did}")
-    int delete(Integer uid,Integer did);
+    int delete(Long uid,Long did);
 
 
 }

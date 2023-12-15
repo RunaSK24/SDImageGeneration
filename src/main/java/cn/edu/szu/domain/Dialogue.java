@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Dialogue {
-    private Integer uid;
-    private Integer did;
+    private Long uid;
+    private Long did;
     private String dialogueSource;
 }

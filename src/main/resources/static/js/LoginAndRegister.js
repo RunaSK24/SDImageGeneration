@@ -36,11 +36,43 @@ function regAction() {
     ) {
         alert("请完整输入注册信息");
         return;
+    }else if(passwordInput.value !== confirmPasswordInput.value){
+        alert("确认密码错误");
+        return;
     }
-    alert("注册成功，请继续完成登录");
-    form_box.style.transform = 'translateX(0%)';
-    register_box.classList.add('hidden');
-    login_box.classList.remove('hidden');
+    const data = {
+        userName: usernameInput.value,
+        passWord: passwordInput.value
+    }
+
+//发送请求获取所有数据
+    fetch('http://localhost:80/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' //指定以json格式发送数据
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json()) //以json格式解码
+        .then(res => {
+            //接收到数据后的处理
+            if (res.code === 20011) {
+                console.log("BingGO")
+                alert("注册成功，请继续完成登录");
+                form_box.style.transform = 'translateX(0%)';
+                register_box.classList.add('hidden');
+                login_box.classList.remove('hidden');
+            } else {
+                alert(res.msg);
+            }
+        })
+        .catch(error => {
+            //出现异常处理
+            alert(error);
+            alert("发生错误，无法连接到服务器");
+        });
+
+
 }
 
 reg.addEventListener('click', regAction)
@@ -59,8 +91,7 @@ function logAction() {
         passWord: passwordInput.value
     }
 
-
-    //发送请求获取所有数据
+//发送请求获取所有数据
     fetch('http://localhost:80/users/validate', {
         method: 'POST',
         headers: {
@@ -72,7 +103,9 @@ function logAction() {
         .then(res => {
             //接收到数据后的处理
             if (res.code === 21001) {
-                console.log(res);
+                sessionStorage.setItem('userId',res.data);
+                console.log(res.data)
+                window.location.href="Main.html"
             } else {
                 alert(res.msg);
             }

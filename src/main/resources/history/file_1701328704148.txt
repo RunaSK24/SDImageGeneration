@@ -1,0 +1,10 @@
+# Test File
+Bot=Hello, I am a bot.
+User=Nice to meet you!
+Bot=How can I assist you today?
+User=I need help with my account.
+Bot=Sure, I can help you with that.
+Bot=imageSource:bot.png
+User=imageSource:bot.png
+
+User=what

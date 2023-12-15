@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <button id="btn">click me</button>
+    <div id="app">
+        <input type="button" value="test" v-on:click="show()">
+
+        <input v-model = "username">
+        <button>{{username}}</button>
+        <table>
+            <tr>
+                <th>uid</th>
+                <th>did</th>
+                <th>名称</th>
+                <th>操作</th>
+            </tr>
+            <tr v-for="(user,i) in users">
+                <td>{{user.uid}}</td>
+                <td>{{user.did}}</td>
+                <td>{{user.dialogueSource}}</td>
+                <td @click="deleteUser(i)"><button>del</button></td>
+            </tr>
+        </table>
+        <button id="bnt"> test 2</button>
+
+    </div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data(){
+            return{
+                username:"",
+                users:[]
+            }
+        },
+        methods:{
+            fetchData(){
+                var _this = this;
+                axios.get('/Dia/3')
+                    .then(function (response) {
+                        // 请求成功时的处理逻辑
+                        var result = response.data;
+                        var dialogueList = result.data;
+                        // 在这里使用对话数据进行后续操作
+                        console.log(dialogueList);
+                        _this.users = dialogueList;
+                    })
+                    .catch(function (error) {
+                        // 请求失败时的处理逻辑
+                        console.log(error);
+                    });
+            },
+            show(){
+                alert("?")
+            },
+            deleteUser(index) {
+                const temp = this.users[index];
+                const uid = temp.uid;
+                const did = temp.did;
+                console.log(uid);
+                console.log(did);
+                axios.delete('/Dia/' + uid + '/' + did)
+                    .then((response) => {
+                        // 请求成功，处理响应数据
+                        console.log(response.data);
+                        // 在这里可以执行重新调用 mounted 方法的逻辑
+                        // 例如 this.fetchData();
+                        this.fetchData();
+                    })
+                    .catch((error) => {
+                        // 请求失败，处理错误
+                        console.error(error);
+                    });
+            }
+        },
+        mounted(){
+            // 页面加载完成后，发送异步请求，查询数据
+            this.fetchData();
+        }
+
+    })
+    var bnt = document
+  //   登录测试
+  var btn = document.getElementById("btn")
+  bnt.addEventListener("click", ()=>{
+    const user = {
+      id:2,
+      userName : 'LiSi',
+      passWord : 'passTest'
+    }
+
+    axios.post('/users/validate',user)
+            .then(response => {
+              // 请求成功，处理响应数据
+                const result = response.data;
+                console.log(result)
+                if (result.data) {
+                    // check为true，表示验证成功
+                    console.log('找到用户，登录成功');
+                    // 在这里进行登录成功后的操作
+                } else {
+                    // check为false，表示验证失败
+                    console.log('密码错误，请重试');
+                    // 在这里进行验证失败后的操作
+                    alert(result.msg)
+                }
+
+
+            })
+            .catch(error => {
+              // 请求失败，处理错误
+              console.error(error);
+            });
+  })
+
+</script>
+
+</html>

@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class Picture {
-    private int uid;
-    private int did;
-    private int pid;
+    private Long uid;
+    private Long did;
+    private Long pid;
     private String prictureSource;
 }

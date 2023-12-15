@@ -14,7 +14,7 @@ public class UserTest {
     @Test
     public void saveTest(){
         User user = new User();
-        user.setId(3);
+        user.setId(3L);
         user.setUserName("ZhangSan");
         user.setPassWord("123456");
         int a = userService.save(user);
@@ -24,7 +24,7 @@ public class UserTest {
     @Test
     public void updateTest(){
         User user = new User();
-        user.setId(3);
+        user.setId(3L);
         user.setUserName("ZhangSan");
         user.setPassWord("123456");
         int a = userService.update(user);
@@ -43,7 +43,7 @@ public class UserTest {
     @Test
     public void Vaild(){
         User user = new User();
-        user.setId(3);
+        user.setId(3L);
         user.setUserName("ZhangSan");
         user.setPassWord("123456");
         System.out.println(userService.isValid(user));

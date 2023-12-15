@@ -30,15 +30,17 @@ public class UserServiceImpl implements UserService {
         return userDao.deleteById(id);
     }
     @Override
-    public boolean isValid(User user){
+    public Long isValid(User user){
         String name = user.getUserName();
         User user1 = userDao.selectByName(name);
         if (user1 == null){
-            return false;
+            return -1L;
         }
         String pass1 = user.getPassWord();
         String pass2 = user1.getPassWord();
-        return pass2.equals(pass1);
-
+        if(pass2.equals(pass1)) {
+            return user1.getId();
+        }
+        return -1L;
     }
 }

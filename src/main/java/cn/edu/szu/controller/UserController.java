@@ -24,6 +24,8 @@ public class UserController {
     @PostMapping
     public Result saveUser(@RequestBody User user){
         System.out.println(user);
+        Long id = System.currentTimeMillis();
+        user.setId(id);
         int check = userService.save(user);
         boolean res = check > 0;
         Integer code = check > 0?Code.SAVE_OK : Code.SAVE_ERR;
@@ -32,17 +34,19 @@ public class UserController {
     }
     @PostMapping("/validate")
     public Result validateUser(@RequestBody User user) {
-        boolean check = userService.isValid(user);
+        System.out.println(user);
+        Long check = userService.isValid(user);
+        System.out.println(check);
         StringBuilder msg = new StringBuilder();
         Integer code;
-        if (check){
+        if (check != -1){
             msg.append("找到用户,登录成功");
             code = Code.USER_CHECK_OK;
         }else {
             msg.append("密码错误，重试");
             code = Code.USER_CHECK_ERR;
         }
-        return new Result(code,null,msg.toString());
+        return new Result(code,check,msg.toString());
     }
 
 }
