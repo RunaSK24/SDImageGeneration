@@ -2,9 +2,10 @@ package cn.edu.szu.service.Impl;
 
 import cn.edu.szu.dao.DialogueDao;
 import cn.edu.szu.domain.Dialogue;
+import cn.edu.szu.domain.Message;
+import cn.edu.szu.domain.TextToImgRequest;
 import cn.edu.szu.service.DialogueService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
@@ -13,16 +14,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DialogueServiceImpl implements DialogueService {
     @Autowired
     DialogueDao dialogueDao;
+
     @Override
     public int insertDialogue(Dialogue dialogue) {
         String fileName = "file_" + System.currentTimeMillis() + ".txt";
         dialogue.setDialogueSource(fileName);
-        loadLocalFile("让我们开始吧",fileName,"Bot");
+        loadLocalFile("让我们开始吧", fileName, "Bot");
         return dialogueDao.insertDialogue(dialogue);
     }
 
@@ -38,31 +41,48 @@ public class DialogueServiceImpl implements DialogueService {
 
     @Override
     public Dialogue selectByIds(Long uid, Long did) {
-        return dialogueDao.selectByIds(uid,did);
+        return dialogueDao.selectByIds(uid, did);
     }
 
 
     @Override
-    public int delete(Long uid,Long did) {
+    public int delete(Long uid, Long did) {
         return dialogueDao.delete(uid, did);
     }
 
     /**
-     * 存储历史记录
+     * 文生图
+     *
      * @param msg
-     * @param uid
-     * @param did
      * @return
      */
     @Override
-    public boolean loadLocal(String msg,Long uid,Long did,String actor) {
-        Dialogue dialogue = dialogueDao.selectByIds(uid,did);
+    public boolean loadLocal(Message msg) {
+        //保存消息到历史记录
+        Dialogue dialogue = dialogueDao.selectByIds(msg.getUid(), msg.getDid());
         String src = dialogue.getDialogueSource();
-        return loadLocalFile(msg,src,actor);
+        boolean saveCheck = loadLocalFile(msg.getMessage(), src, "User");
+        if (!saveCheck) return false;
+
+        //TODO 调用方法生成图片，写入记录文件
+        //调用api进行文生图
+        String fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
+        TextToImgRequest body = StableDiffusionApiUtil.getText2ImageRequestBody(msg.getMessage());
+        final List<String> images = StableDiffusionApiUtil.callSdTextToImgApi(body);
+        for (String image : images) {
+            ImageUtil.convertBase64StrToImage(image, fileName);
+        }
+
+        //保存生成的图片到消息记录
+        saveCheck = loadLocalFile("imageSource:" + fileName, src, "Bot");
+        if (!saveCheck) return false;
+
+        return true;
     }
 
     /**
      * 读历史记录
+     *
      * @param source
      * @return
      */
@@ -74,7 +94,7 @@ public class DialogueServiceImpl implements DialogueService {
             List<String> lines = readLinesFromFile(filePath);
             for (String line : lines) {
 //                System.out.println(line);
-                res.append(line+"\n");
+                res.append(line + "\n");
                 // 在这里进行对每一行的处理
             }
         } catch (IOException e) {
@@ -82,17 +102,18 @@ public class DialogueServiceImpl implements DialogueService {
         }
         return res.toString();
     }
+
     public List<String> readLinesFromFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         return Files.readAllLines(path);
     }
 
 
-    private boolean loadLocalFile(String msg,String dialogSrc,String actor) {
+    private boolean loadLocalFile(String msg, String dialogSrc, String actor) {
         try {
             FileWriter fileWriter =
-                    new FileWriter("src/main/resources/history/"+dialogSrc, true);
-            fileWriter.write("\n"+actor+"="+msg);
+                    new FileWriter("src/main/resources/history/" + dialogSrc, true);
+            fileWriter.write("\n" + actor + "=" + msg);
             fileWriter.close();
             return true;
         } catch (IOException e) {
@@ -101,6 +122,8 @@ public class DialogueServiceImpl implements DialogueService {
         }
     }
 
-
-
+    @Override
+    public String getImage(String filename) {
+        return ImageUtil.convertImageToBase64Str("src/main/resources/image/" + filename);
+    }
 }

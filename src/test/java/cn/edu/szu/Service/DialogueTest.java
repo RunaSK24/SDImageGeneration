@@ -1,6 +1,7 @@
 package cn.edu.szu.Service;
 
 import cn.edu.szu.domain.Dialogue;
+import cn.edu.szu.domain.Message;
 import cn.edu.szu.service.DialogueService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class DialogueTest {
     @Test
     public void load(){
         for (int i = 0 ;i < 10;i++){
-            boolean check = dialogueService.loadLocal("777",3L,3L,"User");
+            boolean check = dialogueService.loadLocal(new Message(3L,3L,"777"));
         }
 
 
