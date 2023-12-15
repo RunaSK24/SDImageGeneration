@@ -6,9 +6,12 @@ newMessage1.innerHTML = `
         <div class="message-content" style="background-color: #f7f7f7">${message1}</div>
     `;
 document.querySelector(".chat-container").appendChild(newMessage1);
+var button = document.getElementById('send');
+var imgBnt = document.getElementById('add-image');
 
 // 添加bot语句
 function addBotMessage(message1) {
+    console.log("???")
     const newMessage1 = document.createElement("div");
     newMessage1.className = "chat-message";
     if (message1.includes("imageSource")) {
@@ -50,20 +53,15 @@ function addBotMessage(message1) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
     // 获取按钮元素
     var button = document.getElementById('send');
-
-// 恢复按钮为可点击
     button.disabled = false;
+    console.log("----------------------------")
+// 恢复按钮为可点击
+    console.log(button.disabled)
 }
 
 // 测试机器人回复(开启则无法发送信息)
 // document.getElementById("answer").addEventListener("click",addBotMessage("你好"));
-var button = document.getElementById('send');
 
-// 设置按钮为不可点击
-button.addEventListener("click",()=>{
-// 设置按钮为不可点击
-    button.disabled = true;
-})
 // 用户添加数据
 function addUserMessage(message) {
     if (message.trim() === "" || message.trim() === null) {
@@ -121,6 +119,10 @@ function addUserMessage(message) {
 
 // 监听发送按钮
 document.getElementById("send").addEventListener("click", function () {
+    if(document.querySelector(".chat-input input").value == null || document.querySelector(".chat-input input").value ===""){
+        alert("请先输入内容");
+        return;
+    }
     const data = {
         uid: sessionStorage.getItem('userId'),
         did: sessionStorage.getItem('did'),
@@ -138,7 +140,8 @@ document.getElementById("send").addEventListener("click", function () {
     }
     // 获取输入框中的消息内容
     addUserMessage(data.message);
-
+    button.disabled = true;
+    imgBnt.disabled = true;
     // 点击发送后存储历史记录
     fetch('http://localhost:80/Dia/storeTextMsg', {
         method: 'POST',
@@ -161,10 +164,13 @@ document.getElementById("send").addEventListener("click", function () {
                     <div class="user-avatar"><img src="../images/bot.png" alt=""></div>
                     <div class="message-content" style="background-color: #f7f7f7"><img src= ${source} ></div>`;
 
+
                 // 将新消息添加到聊天容器
                 const chatContainer = document.querySelector(".chat-container");
                 chatContainer.appendChild(newMessage1);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+                button.disabled = false;
+                imgBnt.disabled = false;
             } else {
                 alert("系统错误,生成图片失败")
             }
@@ -178,6 +184,8 @@ document.getElementById("send").addEventListener("click", function () {
 
 // 图片按钮（调用隐藏的选择文件组件）
 document.getElementById("add-image").addEventListener('click', function () {
+    button.disabled = true;
+    imgBnt.disabled = true;
     document.getElementById("image-input").click();
 });
 // 隐藏的选择文件组件
@@ -238,6 +246,8 @@ document.getElementById("image-input").addEventListener('change', function (even
                         // 将新消息添加到聊天容器
                         chatContainer.appendChild(newMessage1);
                         chatContainer.scrollTop = chatContainer.scrollHeight;
+                        button.disabled = false;
+                        imgBnt.disabled = false;
                     } else {
                         alert("系统错误,历史记录已丢失,该记录已删除,请手动删除该记录")
                     }

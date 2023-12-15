@@ -3,7 +3,10 @@
     margin: 0;
     padding: 0;
 }
-
+img {
+    max-width: 500px; /* 设置最大宽度为500像素 */
+    max-height: 300px; /* 设置最大高度为300像素 */
+}
 body {
     /* 100%窗口宽度和高度 */
     width: 100vw;

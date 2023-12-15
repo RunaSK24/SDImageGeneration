@@ -90,6 +90,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     savedUserId = sessionStorage.getItem('userId');
     console.log(savedUserId);
     LoadDiaHis();
+    const chatContainer = document.querySelector(".chat-container");
+    chatContainer.scrollTop = chatContainer.scrollHeight;
     // 在这里进行你对用户 ID 的后续处理
 });
 

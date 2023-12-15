@@ -13,3 +13,7 @@ User=a girl wear beautiful clothe on the beach
 Bot=imageSource:921f6ab707544d8fa7a04c0f90a5ff94.png
 User=a girl wear beautiful clothe on the beach ,beach have a lot of people
 Bot=imageSource:ddcf441d7cf64ed286674b7f0c7b4204.png
+User=
+Bot=imageSource:fd9d6d918aac4134a254b4a1249ec78e.png
+User=a girl
+Bot=imageSource:8a3ad24425114398975c3ddce5cc09c2.png
