@@ -104,6 +104,9 @@ function logAction() {
             //接收到数据后的处理
             if (res.code === 21001) {
                 sessionStorage.setItem('userId',res.data);
+                sessionStorage.setItem('uName',usernameInput.value);
+                sessionStorage.setItem('uPass',passwordInput.value)
+
                 console.log(res.data)
                 window.location.href="Main.html"
             } else {

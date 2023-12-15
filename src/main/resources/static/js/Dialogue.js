@@ -49,13 +49,27 @@ function addBotMessage(message1) {
     var chatContainer = document.querySelector(".chat-container");
     chatContainer.appendChild(newMessage1)
     chatContainer.scrollTop = chatContainer.scrollHeight;
+    // 获取按钮元素
+    var button = document.getElementById('send');
+
+// 恢复按钮为可点击
+    button.disabled = false;
 }
 
 // 测试机器人回复(开启则无法发送信息)
 // document.getElementById("answer").addEventListener("click",addBotMessage("你好"));
+var button = document.getElementById('send');
 
+// 设置按钮为不可点击
+button.addEventListener("click",()=>{
+// 设置按钮为不可点击
+    button.disabled = true;
+})
 // 用户添加数据
 function addUserMessage(message) {
+// 获取按钮元素
+
+
     if (message.trim() === "" || message.trim() === null) {
         return
     }

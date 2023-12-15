@@ -50,8 +50,43 @@ function LoadDiaHis(){
             alert("发生错误，无法连接到服务器");
         });
 }
+function judge(){
+    if (sessionStorage.getItem('userId') == null ){
+        return false;
+    }
+    const data = {
+        userName: sessionStorage.getItem('uName'),
+        passWord: sessionStorage.getItem('uPass')
+    }
+    console.log(data)
+//发送请求获取所有数据
+    fetch('http://localhost:80/users/validate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' //指定以json格式发送数据
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json()) //以json格式解码
+        .then(res => {
+            //接收到数据后的处理
+            if (res.code === 21001) {
+            } else {
+                return false;
+            }
+        })
+        .catch(error => {
+            //出现异常处理
+            alert(error);
+            alert("发生错误，无法连接到服务器");
+        });
+    return true;
+}
 // 页面加载完成后加载历史记录
 window.addEventListener('DOMContentLoaded', (event) => {
+    if(!judge()){
+        window.location.href = "../html/LoginAndRegister.html"
+    }
     savedUserId = sessionStorage.getItem('userId');
     console.log(savedUserId);
     LoadDiaHis();
