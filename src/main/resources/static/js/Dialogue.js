@@ -1,4 +1,4 @@
-var message1 = "你好";
+var message1 = "你好，请 选择消息/新建对话 开始生图";
 var newMessage1 = document.createElement("div");
 newMessage1.className = "chat-message";
 newMessage1.innerHTML = `
@@ -6,8 +6,64 @@ newMessage1.innerHTML = `
         <div class="message-content" style="background-color: #f7f7f7">${message1}</div>
     `;
 document.querySelector(".chat-container").appendChild(newMessage1);
+
 var button = document.getElementById('send');
 var imgBnt = document.getElementById('add-image');
+let chatContainer = document.querySelector(".chat-container");
+let image;
+
+//bot发送文本消息
+function botSendText(textMessage) {
+    const newMessage = document.createElement("div");
+    newMessage.className = "chat-message";
+    newMessage.innerHTML = `
+            <div class="user-avatar"><img src="../images/bot.png" alt=""></div>
+            <div class="message-content" style="background-color: #f7f7f7">${textMessage}</div>
+        `;
+    chatContainer.appendChild(newMessage)
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+//bot发送图片消息
+function botSendImage(imageMessage) {
+    const newMessage = document.createElement("div");
+    newMessage.className = "chat-message";
+    newMessage.innerHTML = `
+            <div class="user-avatar"><img src="../images/bot.png" alt=""></div>
+            <div class="message-content" style="background-color: #f7f7f7"><img src= ${imageMessage} ></div>
+        `;
+    chatContainer.appendChild(newMessage)
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+
+//user发送文字消息
+function userSendText(textMessage) {
+    const newMessage = document.createElement("div");
+    newMessage.style.display = "flex";
+    newMessage.style.justifyContent = "flex-end";
+    newMessage.className = "chat-message";
+    newMessage.innerHTML = `
+            <div class="message-content" style="background-color: #3b3abe ;color: white">${textMessage}</div>
+            <div class="user-avatar" style="margin-left: 10px"><img src="../images/people.jpg" alt=""></div>
+        `;
+    chatContainer.appendChild(newMessage);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+//user发送图片消息
+function userSendImage(imageMessage) {
+    const newMessage = document.createElement("div");
+    newMessage.style.display = "flex";
+    newMessage.style.justifyContent = "flex-end";
+    newMessage.className = "chat-message";
+    newMessage.innerHTML = `
+            <div class="message-content" style="background-color: #3b3abe ;color: white"> <img src= ${imageMessage} > </div>
+            <div class="user-avatar" style="margin-left: 10px"><img src="../images/people.jpg" alt=""></div>
+        `;
+    chatContainer.appendChild(newMessage);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
 
 // 添加bot语句
 function addBotMessage(message1) {
@@ -51,12 +107,6 @@ function addBotMessage(message1) {
     const chatContainer = document.querySelector(".chat-container");
     chatContainer.appendChild(newMessage1)
     chatContainer.scrollTop = chatContainer.scrollHeight;
-    // 获取按钮元素
-    var button = document.getElementById('send');
-    button.disabled = false;
-    console.log("----------------------------")
-// 恢复按钮为可点击
-    console.log(button.disabled)
 }
 
 // 测试机器人回复(开启则无法发送信息)
@@ -119,31 +169,34 @@ function addUserMessage(message) {
 
 // 监听发送按钮
 document.getElementById("send").addEventListener("click", function () {
-    if(document.querySelector(".chat-input input").value == null || document.querySelector(".chat-input input").value ===""){
+    if (document.querySelector(".chat-input input").value == null || document.querySelector(".chat-input input").value === "") {
         alert("请先输入内容");
         return;
     }
+
+    console.log(image);
     const data = {
         uid: sessionStorage.getItem('userId'),
         did: sessionStorage.getItem('did'),
+        image: image,
         message: document.querySelector(".chat-input input").value
     }
-    // var message = document.querySelector(".chat-input input").value;
-    // var did = sessionStorage.getItem('did');
-    // var uid = sessionStorage.getItem('userId');
-    console.log("---------------------------")
-    console.log(data.did)
-    console.log(data.uid)
+    console.log(data)
+
     if (data.did == null || data.uid == null) {
         alert("请先选择对话");
         return
     }
+
     // 获取输入框中的消息内容
-    addUserMessage(data.message);
+    userSendText(data.message);
+
+    //设置按钮不可点击
     button.disabled = true;
     imgBnt.disabled = true;
+
     // 点击发送后存储历史记录
-    fetch('http://localhost:80/Dia/storeTextMsg', {
+    fetch('http://localhost:80/Dia/imageGeneration', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json' //指定以json格式发送数据
@@ -155,20 +208,10 @@ document.getElementById("send").addEventListener("click", function () {
             console.log(res)
             //接收到数据后的处理
             if (res.code === 22001) {
-                let source = "data:image/jpeg;base64," + res.data;
+                //bot回复图片消息
+                botSendImage("data:image/jpeg;base64," + res.data)
 
-                //创建新消息
-                const newMessage1 = document.createElement("div");
-                newMessage1.className = "chat-message";
-                newMessage1.innerHTML = `
-                    <div class="user-avatar"><img src="../images/bot.png" alt=""></div>
-                    <div class="message-content" style="background-color: #f7f7f7"><img src= ${source} ></div>`;
-
-
-                // 将新消息添加到聊天容器
-                const chatContainer = document.querySelector(".chat-container");
-                chatContainer.appendChild(newMessage1);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                //恢复按钮可用
                 button.disabled = false;
                 imgBnt.disabled = false;
             } else {
@@ -180,12 +223,15 @@ document.getElementById("send").addEventListener("click", function () {
             alert(error);
             alert("发生错误，无法连接到服务器");
         });
+
+    //清空输入框
+    document.querySelector(".chat-input input").value = "";
+
+    image = "";
 });
 
 // 图片按钮（调用隐藏的选择文件组件）
 document.getElementById("add-image").addEventListener('click', function () {
-    button.disabled = true;
-    imgBnt.disabled = true;
     document.getElementById("image-input").click();
 });
 // 隐藏的选择文件组件
@@ -198,65 +244,14 @@ document.getElementById("image-input").addEventListener('change', function (even
         reader.addEventListener('load', function () {
             //读取图片内容
             const imageDataUrl = reader.result;
-            console.log(imageDataUrl);
             //将消息添加到对话框
-            const newMessage = document.createElement("div");
-            newMessage.style.display = "flex";
-            newMessage.style.justifyContent = "flex-end";
-            newMessage.className = "chat-message";
-            newMessage.innerHTML = `
-                <div class="message-content" style="background-color: #3b3abe ;color: white"> <img src= ${imageDataUrl} > </div>
-                <div class="user-avatar" style="margin-left: 10px"><img src="../images/people.jpg" alt=""></div>`;
-            const chatContainer = document.querySelector(".chat-container");
-            chatContainer.appendChild(newMessage);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            userSendImage(imageDataUrl);
 
             //提取base64图片信息
-            const base64 = imageDataUrl.split(',')[1];
-            console.log(base64);
+            image = imageDataUrl.split(',')[1];
 
-            //构造发送的数据
-            const data = {
-                uid: sessionStorage.getItem('userId'),
-                did: sessionStorage.getItem('did'),
-                message: base64
-            }
-            //发送数据
-            fetch('http://localhost:80/Dia/storeImageMsg', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' //指定以json格式发送数据
-                },
-                body: JSON.stringify(data)
-            })
-                .then(res => res.json()) //以json格式解码
-                .then(res => {
-                    console.log(res)
-                    //接收到数据后的处理
-                    if (res.code === 22001) {
-                        let source = "data:image/jpeg;base64," + res.data;
-
-                        //创建新消息
-                        const newMessage1 = document.createElement("div");
-                        newMessage1.className = "chat-message";
-                        newMessage1.innerHTML = `
-                            <div class="user-avatar"><img src="../images/bot.png" alt=""></div>
-                            <div class="message-content" style="background-color: #f7f7f7"><img src= ${source} ></div>`;
-
-                        // 将新消息添加到聊天容器
-                        chatContainer.appendChild(newMessage1);
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                        button.disabled = false;
-                        imgBnt.disabled = false;
-                    } else {
-                        alert("系统错误,历史记录已丢失,该记录已删除,请手动删除该记录")
-                    }
-                })
-                .catch(error => {
-                    //出现异常处理
-                    alert(error);
-                    alert("发生错误，无法连接到服务器");
-                });
+            //机器人回复
+            botSendText("");
         });
 
         reader.readAsDataURL(file);

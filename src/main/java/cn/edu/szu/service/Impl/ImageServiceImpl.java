@@ -25,7 +25,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String imageToImage(String imagePath) {
         String fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
-        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(imagePath);
+        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(imagePath,"");
         final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
         for (String image : images) {
             ImageUtil.convertBase64StrToImage(image,fileName);

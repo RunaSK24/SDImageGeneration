@@ -95,7 +95,7 @@ public class StableDiffusionApiUtil {
      * @param image base64图片数据
      * @return ImgToImg请求体
      */
-    public static ImgToImgRequest getImg2ImageRequestBody(String image) {
+    public static ImgToImgRequest getImg2ImageRequestBody(String image, String prompt) {
         final String base64SrcImg = "base64SrcImg"; //convertImageToBase64("src/main/resources/image/1.jpg");
 
         Args args1 = Args.builder()
@@ -139,7 +139,7 @@ public class StableDiffusionApiUtil {
         List<String> images = new ArrayList<>();
         images.add(image);
         ImgToImgRequest body = ImgToImgRequest.builder().sampler_name("")
-                .prompt("")
+                .prompt(prompt)
                 .negative_prompt("nsfw,logo,text,badhandv4,EasyNegative,ng_deepnegative_v1_75t,rev2-badprompt,verybadimagenegative_v1.3,negative_hand-neg,mutated hands and fingers,poorly drawn face,extra limb,missing limb,disconnected limbs,malformed hands,ugly")
                 .sampler_index("DPM++ SDE Karras")
                 .seed(-1)

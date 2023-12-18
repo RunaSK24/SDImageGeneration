@@ -87,16 +87,23 @@ public class DialogueServiceImpl implements DialogueService {
         String result = "";
         //保存用户输入的图片
         String fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
-        ImageUtil.convertBase64StrToImage(msg.getMessage(), fileName);
+        ImageUtil.convertBase64StrToImage(msg.getImage(), fileName);
         //保存消息记录
         Dialogue dialogue = dialogueDao.selectByIds(msg.getUid(), msg.getDid());
         String src = dialogue.getDialogueSource();
+        //图片消息
         boolean saveCheck = loadLocalFile("imageSource:" + fileName, src, "User");
+        if (!saveCheck) return null;
+        //机器人回复
+        saveCheck = loadLocalFile("请继续输入图生图的提示词", src, "Bot");
+        if (!saveCheck) return null;
+        //文字消息
+        saveCheck = loadLocalFile(msg.getMessage(), src, "User");
         if (!saveCheck) return null;
 
         //进行图生图
         fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
-        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(msg.getMessage());
+        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(msg.getImage(),msg.getMessage());
         final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
         for (String image : images) {
             result = image;

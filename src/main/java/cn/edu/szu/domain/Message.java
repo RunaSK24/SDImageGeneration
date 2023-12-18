@@ -8,5 +8,6 @@ import lombok.Data;
 public class Message {
     private Long uid;
     private Long did;
+    private String image;
     private String message;
 }
