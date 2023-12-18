@@ -184,8 +184,7 @@ document.getElementById("send").addEventListener("click", function () {
 
 // 图片按钮（调用隐藏的选择文件组件）
 document.getElementById("add-image").addEventListener('click', function () {
-    button.disabled = true;
-    imgBnt.disabled = true;
+
     document.getElementById("image-input").click();
 });
 // 隐藏的选择文件组件
@@ -221,8 +220,11 @@ document.getElementById("image-input").addEventListener('change', function (even
                 did: sessionStorage.getItem('did'),
                 message: base64
             }
+            button.disabled = true;
+            imgBnt.disabled = true;
             //发送数据
             fetch('http://localhost:80/Dia/storeImageMsg', {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json' //指定以json格式发送数据
