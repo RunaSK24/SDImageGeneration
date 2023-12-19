@@ -154,6 +154,7 @@ public class DialogueController {
             base64 = dialogueService.textToImage(msg);
         } else {
             System.out.println("接收到图生图请求");
+            System.out.println(msg);
             base64 = dialogueService.imageToImage(msg);
         }
 

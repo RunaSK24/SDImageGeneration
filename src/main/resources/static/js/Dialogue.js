@@ -49,6 +49,7 @@ function userSendText(textMessage) {
         `;
     chatContainer.appendChild(newMessage);
     chatContainer.scrollTop = chatContainer.scrollHeight;
+    image = null;
 }
 
 //user发送图片消息
@@ -169,7 +170,11 @@ function addUserMessage(message) {
 
 // 监听发送按钮
 document.getElementById("send").addEventListener("click", function () {
-    if (document.querySelector(".chat-input input").value == null || document.querySelector(".chat-input input").value === "") {
+    // console.log(image)
+    if ((document.querySelector(".chat-input input").value == null
+        || document.querySelector(".chat-input input").value === "")
+        && (image == "" || image == null)
+    ) {
         alert("请先输入内容");
         return;
     }
@@ -188,8 +193,15 @@ document.getElementById("send").addEventListener("click", function () {
         return
     }
 
-    // 获取输入框中的消息内容
-    userSendText(data.message);
+    if(document.querySelector(".chat-input input").value == null
+        || document.querySelector(".chat-input input").value === ""){
+        // 输入框无消息，默认图生图
+        userSendText("进行图生图");
+        data.message = "进行图生图"
+    }else {
+        // 获取输入框中的消息内容
+        userSendText(data.message);
+    }
 
     //设置按钮不可点击
     button.disabled = true;
@@ -237,7 +249,7 @@ document.getElementById("add-image").addEventListener('click', function () {
 // 隐藏的选择文件组件
 document.getElementById("image-input").addEventListener('change', function (event) {
     const file = event.target.files[0];
-
+    event.target.value = '';
     if (file) {
         const reader = new FileReader();
 
@@ -251,7 +263,7 @@ document.getElementById("image-input").addEventListener('change', function (even
             image = imageDataUrl.split(',')[1];
 
             //机器人回复
-            botSendText("");
+            botSendText("您已经添加了一个图片了，请继续输入文字进行图像二次编辑  ,  或者点击发送进行图生图  >_<");
         });
 
         reader.readAsDataURL(file);
