@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class GrayscaleFilter implements BufferedImageOp {
+    //转换为base64
     public String toBase64(BufferedImage img){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
@@ -27,6 +28,14 @@ public class GrayscaleFilter implements BufferedImageOp {
         String base64Image = DatatypeConverter.printBase64Binary(bytes);
         return base64Image;
     }
+
+    /**
+     * 灰度处理
+     * @param img The {@code BufferedImage} to be filtered
+     * @param dest The {@code BufferedImage} in which to store the results$
+     *
+     * @return
+     */
     public BufferedImage filter(BufferedImage img, BufferedImage dest) {
         if (dest == null) {
             dest = createCompatibleDestImage(img, null);
@@ -54,6 +63,13 @@ public class GrayscaleFilter implements BufferedImageOp {
         return dest;
     }
 
+
+    /**
+     * 继承了接口重写的方法
+     * @param src The {@code BufferedImage} to be filtered
+     *
+     * @return
+     */
     @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return new Rectangle(0, 0, src.getWidth(), src.getHeight());
