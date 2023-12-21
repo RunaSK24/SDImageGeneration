@@ -9,7 +9,7 @@ public interface DialogueService {
     int insertDialogue(Dialogue dialogue);
 
     int updateDialogue(Dialogue dialogue);
-
+    boolean loadLocalFile(String msg, String dialogSrc, String actor);
     List<Dialogue> selectByUserId(Long id);
 
     Dialogue selectByIds(Long uid, Long did);

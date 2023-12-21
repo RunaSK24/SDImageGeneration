@@ -104,7 +104,9 @@ public class DialogueServiceImpl implements DialogueService {
         saveCheck = loadLocalFile(msg.getMessage(), src, "User");
         if (!saveCheck) return null;
         if (msg.getMessage().toLowerCase().equals("gray")){
-            fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
+            //灰度滤镜添加
+            fileName = String.format("%s.png", UUID.randomUUID().toString()
+                    .replaceAll("-", ""));
             ImageUtil.convertBase64StrToImage(msg.getImage(),fileName);
             BufferedImage img = null;
             try {
@@ -116,7 +118,8 @@ public class DialogueServiceImpl implements DialogueService {
             img = filter.filter(img, null);
             result = filter.toBase64(img);
             try {
-                ImageIO.write(img, "png", new File("src/main/resources/image/Gray"+fileName));
+                ImageIO.write(img, "png",
+                        new File("src/main/resources/image/Gray"+fileName));
                 //保存生成的图片到消息记录
                 saveCheck = loadLocalFile("imageSource:Gray" + fileName, src, "Bot");
                 if (!saveCheck) return null;
@@ -171,8 +174,8 @@ public class DialogueServiceImpl implements DialogueService {
         return Files.readAllLines(path);
     }
 
-
-    private boolean loadLocalFile(String msg, String dialogSrc, String actor) {
+    @Override
+    public boolean loadLocalFile(String msg, String dialogSrc, String actor) {
         try {
             FileWriter fileWriter =
                     new FileWriter("src/main/resources/history/" + dialogSrc, true);

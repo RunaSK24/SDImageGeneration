@@ -21,12 +21,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User selectById(Integer id) {
+    public User selectById(Long id) {
         return userDao.selectById(id);
     }
 
     @Override
-    public int delete(Integer id) {
+    public int delete(Long id) {
         return userDao.deleteById(id);
     }
     @Override

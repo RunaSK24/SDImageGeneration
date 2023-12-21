@@ -15,7 +15,7 @@ public class UserController {
     private UserService userService;
 //    获取User
     @GetMapping("/{id}")
-    public Result getUser(@PathVariable Integer id){
+    public Result getUser(@PathVariable Long id){
         User user = userService.selectById(id);
         Integer code = user != null? Code.GET_OK : Code.GET_ERR;
         String msg = user != null ? null : "数据查询失败，请重试";
