@@ -5,38 +5,38 @@ package cn.edu.szu.controller;
  * (统一返回数据格式)
  */
 public class Result {
-    private Integer Code;
-    private Object Data;
-    private String msg;
+    private Integer code; // 结果码
+    private Object data; // 返回的数据
+    private String msg; // 返回的消息
 
     public Result() {
     }
 
     public Result(Integer code, Object data) {
-        Code = code;
-        Data = data;
+        this.code = code;
+        this.data = data;
     }
 
     public Result(Integer code, Object data, String msg) {
-        Code = code;
-        Data = data;
+        this.code = code;
+        this.data = data;
         this.msg = msg;
     }
 
     public Integer getCode() {
-        return Code;
+        return code;
     }
 
     public void setCode(Integer code) {
-        Code = code;
+        this.code = code;
     }
 
     public Object getData() {
-        return Data;
+        return data;
     }
 
     public void setData(Object data) {
-        Data = data;
+        this.data = data;
     }
 
     public String getMsg() {
@@ -50,8 +50,8 @@ public class Result {
     @Override
     public String toString() {
         return "Result{" +
-                "Code=" + Code +
-                ", Data=" + Data +
+                "Code=" + code +
+                ", Data=" + data +
                 ", msg='" + msg + '\'' +
                 '}';
     }

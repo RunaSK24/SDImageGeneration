@@ -8,15 +8,13 @@ var savedUserId  = 0;
 // console.log(savedUserId);
 
 // 加载之前保存的对话：
-function LoadDiaHis(){
-    console.log("?????")
+function LoadDiaHis() {
     console.log(savedUserId)
-    fetch('http://localhost:80/Dia/'+savedUserId, {
+    fetch('http://localhost:80/Dia/' + savedUserId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json' //指定以json格式发送数据
         },
-        // body: JSON.stringify(data)
     })
         .then(res => res.json()) //以json格式解码
         .then(res => {
@@ -24,19 +22,13 @@ function LoadDiaHis(){
             //接收到数据后的处理
             if (res.code === 20041) {
                 var arr = res.data;
+                //将每个聊天记录添加到侧边栏
                 arr.forEach((obj) => {
-                    console.log("DDD")
                     console.log(obj.did)
-                    // 在这里对每个对象进行处理
-                    // console.log(obj.uid); // 输出 uid 属性的值
-                    // console.log(obj.did); // 输出 did 属性的值
-                    // console.log(obj.dialogueSource); // 输出 dialogueSource 属性的值
                     addDialog(obj.did)
                 });
-                // addDialog()
             } else {
-                console.log("222222222222")
-                // 如果没有对话，则弹窗并且新建一个
+                // 如果没有读取到任何对话，则弹窗并且新建一个对话
                 if (numberOfItems === 1) {
                     var closeModalButton = document.getElementById("closeModal");
                     var modal = document.getElementById("myModal");
@@ -82,6 +74,7 @@ function judge(){
         });
     return true;
 }
+
 // 页面加载完成后加载历史记录
 window.addEventListener('DOMContentLoaded', (event) => {
     if(!judge()){
@@ -98,7 +91,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 // 选中时设置选中项的样式，清除其他item的选中
 // 获取历史记录
 function ReadFile(src){
-    fetch('http://localhost:80/Dia/fileRead/'+src, {
+    fetch('http://localhost:80/Dia/fileRead/' + src, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json' //指定以json格式发送数据
@@ -136,6 +129,7 @@ function ReadFile(src){
             alert("发生错误，无法连接到服务器");
         });
 }
+
 function setActive() {
     var chatContainer = document.querySelector(".chat-container");
     chatContainer.innerHTML = "";//移除其他对话的记录
@@ -175,7 +169,6 @@ function setActive() {
             alert("发生错误，无法连接到服务器");
         });
     // current_tag.innerText = this.innerText;
-
 }
 
 // 向对话列表中添加一个对话
@@ -195,7 +188,7 @@ function addDialog(did) {
     var close = newLi.querySelector(".close");
     close.addEventListener("click", function () {
         ul.removeChild(newLi);
-        fetch('http://localhost:80/Dia/'+savedUserId+"/"+did, {//删除数据库中的对话
+        fetch('http://localhost:80/Dia/'+savedUserId+"/"+did, { //删除数据库中的对话
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json' //指定以json格式发送数据

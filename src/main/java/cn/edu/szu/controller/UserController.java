@@ -13,7 +13,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-//    获取User
+    //获取User
     @GetMapping("/{id}")
     public Result getUser(@PathVariable Long id){
         User user = userService.selectById(id);

@@ -111,45 +111,11 @@ public class DialogueController {
 
     }
 
-    @PostMapping("/storeTextMsg")//前端发送请求，将历史记录存储在本地
-    public Result textToImage(@RequestBody Message msg) {
-        System.out.println("收到消息：" + msg);
-        String base64 = dialogueService.textToImage(msg);
-        Integer code;
-        String mes;
-        if (base64 != null) {
-            code = Code.HIS_LOAD_OK;
-            mes = "LOAD_SUCCESS";
-        } else {
-            code = Code.HIS_LOAD_ERR;
-            mes = "LOAD_ERR";
-        }
-
-        return new Result(code, base64, mes);
-    }
-
-    @PostMapping("/storeImageMsg")//前端发送请求，将历史记录存储在本地
-    public Result imageToImage(@RequestBody Message msg) {
-        //System.out.println("收到消息：" + msg);
-        String base64 = dialogueService.imageToImage(msg);
-        Integer code;
-        String mes;
-        if (base64 != null) {
-            code = Code.HIS_LOAD_OK;
-            mes = "LOAD_SUCCESS";
-        } else {
-            code = Code.HIS_LOAD_ERR;
-            mes = "LOAD_ERR";
-        }
-
-        return new Result(code, base64, mes);
-    }
-
     @PostMapping("/imageGeneration")
     public Result imageGeneration(@RequestBody Message msg) {
         String base64;
         //判断文生图还是图生图
-        if (msg.getImage() == null || msg.getImage().isEmpty()){
+        if (msg.getImage() == null || msg.getImage().isEmpty()) {
             System.out.println("接收到文生图请求");
             base64 = dialogueService.textToImage(msg);
         } else {
@@ -158,8 +124,8 @@ public class DialogueController {
             base64 = dialogueService.imageToImage(msg);
         }
 
-        Integer code = base64 == null ? Code.HIS_LOAD_ERR : Code.HIS_LOAD_OK;
-        String mes = base64 == null ? "LOAD_ERR" : "LOAD_SUCCESS";
+        Integer code = base64.isEmpty() ? Code.HIS_LOAD_ERR : Code.HIS_LOAD_OK;
+        String mes = base64.isEmpty() ? "LOAD_ERR" : "LOAD_SUCCESS";
 
         return new Result(code, base64, mes);
     }

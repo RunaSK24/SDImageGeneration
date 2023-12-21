@@ -37,15 +37,16 @@ function regAction() {
         alert("请完整输入注册信息");
         return;
     }else if(passwordInput.value !== confirmPasswordInput.value){
-        alert("确认密码错误");
+        alert("两次输入密码不同，请检查输入内容");
         return;
     }
+    //构造发送请求的数据
     const data = {
         userName: usernameInput.value,
         passWord: passwordInput.value
     }
 
-//发送请求获取所有数据
+    //发送请求进行账户注册
     fetch('http://localhost:80/users', {
         method: 'POST',
         headers: {
@@ -55,24 +56,21 @@ function regAction() {
     })
         .then(res => res.json()) //以json格式解码
         .then(res => {
-            //接收到数据后的处理
+            //接收到数据后判断是否成功
             if (res.code === 20011) {
-                console.log("BingGO")
-                alert("注册成功，请继续完成登录");
+                alert("注册成功，请继续完成登录");//提示注册成功
+                //切换页面到登录状态
                 form_box.style.transform = 'translateX(0%)';
                 register_box.classList.add('hidden');
                 login_box.classList.remove('hidden');
             } else {
-                alert(res.msg);
+                alert(res.msg);//失败提示
             }
         })
         .catch(error => {
             //出现异常处理
-            alert(error);
-            alert("发生错误，无法连接到服务器");
+            alert("发生错误，无法连接到服务器：" + error);
         });
-
-
 }
 
 reg.addEventListener('click', regAction)
@@ -91,7 +89,7 @@ function logAction() {
         passWord: passwordInput.value
     }
 
-//发送请求获取所有数据
+    //发送登录请求
     fetch('http://localhost:80/users/validate', {
         method: 'POST',
         headers: {
@@ -103,12 +101,13 @@ function logAction() {
         .then(res => {
             //接收到数据后的处理
             if (res.code === 21001) {
+                //保存数据
                 sessionStorage.setItem('userId',res.data);
                 sessionStorage.setItem('uName',usernameInput.value);
-                sessionStorage.setItem('uPass',passwordInput.value)
+                sessionStorage.setItem('uPass',passwordInput.value);
 
-                console.log(res.data)
-                window.location.href="Main.html"
+                console.log(res.data);
+                window.location.href="Main.html";//跳转界面
             } else {
                 alert(res.msg);
             }
