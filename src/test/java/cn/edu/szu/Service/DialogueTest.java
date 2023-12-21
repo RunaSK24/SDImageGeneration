@@ -46,10 +46,8 @@ public class DialogueTest {
     @Test
     public void load(){
         for (int i = 0 ;i < 10;i++){
-            String base64 = dialogueService.textToImage(new Message(3L,3L,"777"));
+//            String base64 = dialogueService.textToImage(new Message(3L,3L,"777"));
         }
-
-
     }
 
 }

@@ -24,7 +24,7 @@ public class StableDiffusionTest {
 
     @Test
     public void testImgToImg(){
-        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody("D:\\Code\\Java\\SDImageGeneration\\src\\main\\resources\\image\\4.jpg");
+        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody("D:\\Code\\Java\\SDImageGeneration\\src\\main\\resources\\image\\4.jpg","");
         final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
         for (String image : images) {
             System.out.println(ImageUtil.convertBase64StrToImage(image, String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""))));

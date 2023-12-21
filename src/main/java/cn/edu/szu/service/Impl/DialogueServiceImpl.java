@@ -9,6 +9,9 @@ import cn.edu.szu.service.DialogueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -100,19 +103,42 @@ public class DialogueServiceImpl implements DialogueService {
         //文字消息
         saveCheck = loadLocalFile(msg.getMessage(), src, "User");
         if (!saveCheck) return null;
+        if (msg.getMessage().toLowerCase().equals("gray")){
+            fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
+            ImageUtil.convertBase64StrToImage(msg.getImage(),fileName);
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File("src/main/resources/image/"+fileName));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            GrayscaleFilter filter = new GrayscaleFilter();
+            img = filter.filter(img, null);
+            result = filter.toBase64(img);
+            try {
+                ImageIO.write(img, "png", new File("src/main/resources/image/Gray"+fileName));
+                //保存生成的图片到消息记录
+                saveCheck = loadLocalFile("imageSource:Gray" + fileName, src, "Bot");
+                if (!saveCheck) return null;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else{
+            //进行图生图
+            fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
+            ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(msg.getImage(),msg.getMessage());
+            final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
+            for (String image : images) {
+                result = image;
+                ImageUtil.convertBase64StrToImage(image,fileName);
+            }
 
-        //进行图生图
-        fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
-        ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(msg.getImage(),msg.getMessage());
-        final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
-        for (String image : images) {
-            result = image;
-            ImageUtil.convertBase64StrToImage(image,fileName);
+            //保存生成的图片到消息记录
+            saveCheck = loadLocalFile("imageSource:" + fileName, src, "Bot");
+            if (!saveCheck) return null;
         }
 
-        //保存生成的图片到消息记录
-        saveCheck = loadLocalFile("imageSource:" + fileName, src, "Bot");
-        if (!saveCheck) return null;
 
         return result;
     }
