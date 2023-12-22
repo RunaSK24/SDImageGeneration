@@ -98,7 +98,7 @@ public class DialogueServiceImpl implements DialogueService {
         boolean saveCheck = loadLocalFile("imageSource:" + fileName, src, "User");
         if (!saveCheck) return null;
         //机器人回复
-        saveCheck = loadLocalFile("请继续输入图生图的提示词", src, "Bot");
+        saveCheck = loadLocalFile("您已经添加了一个图片了，请继续输入文字进行图像二次编辑, 或者点击发送进行图生图 >_<", src, "Bot");
         if (!saveCheck) return null;
         //文字消息
         saveCheck = loadLocalFile(msg.getMessage(), src, "User");
@@ -159,7 +159,6 @@ public class DialogueServiceImpl implements DialogueService {
         try {
             List<String> lines = readLinesFromFile(filePath);
             for (String line : lines) {
-//                System.out.println(line);
                 res.append(line + "\n");
                 // 在这里进行对每一行的处理
             }

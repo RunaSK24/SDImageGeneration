@@ -3,6 +3,7 @@ package cn.edu.szu.controller;
 import cn.edu.szu.domain.Dialogue;
 import cn.edu.szu.domain.Message;
 import cn.edu.szu.service.DialogueService;
+import cn.edu.szu.service.Impl.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,13 +116,13 @@ public class DialogueController {
     public Result imageGeneration(@RequestBody Message msg) {
         String base64;
         //判断文生图还是图生图
-        if (msg.getImage() == null || msg.getImage().isEmpty()) {
-            System.out.println("接收到文生图请求");
-            base64 = dialogueService.textToImage(msg);
-        } else {
+        if (ImageUtil.isImageFromBase64(msg.getImage())) {
             System.out.println("接收到图生图请求");
             System.out.println(msg);
             base64 = dialogueService.imageToImage(msg);
+        } else {
+            System.out.println("接收到文生图请求");
+            base64 = dialogueService.textToImage(msg);
         }
 
         Integer code = base64.isEmpty() ? Code.HIS_LOAD_ERR : Code.HIS_LOAD_OK;

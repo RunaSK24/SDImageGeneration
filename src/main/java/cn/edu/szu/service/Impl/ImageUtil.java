@@ -83,4 +83,22 @@ public class ImageUtil {
             }
         }
     }
+
+    public static boolean isImageFromBase64(String base64Str) {
+        if (base64Str == null || base64Str.isEmpty()) {
+            return false;
+        }
+        boolean flag = false;
+        try {
+            // 获取图片流
+            BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64Str)));
+            if (null == bufImg) {
+                return false;
+            }
+            flag = true;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return flag;
+    }
 }

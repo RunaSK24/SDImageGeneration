@@ -1,8 +1,7 @@
-
 // 需要操作的元素
 let items = list.querySelectorAll(".item");
 var numberOfItems = items.length;
-var savedUserId  = 0;
+var savedUserId = 0;
 // alert("?")
 //获取保存的id
 // console.log(savedUserId);
@@ -42,8 +41,9 @@ function LoadDiaHis() {
             alert("发生错误，无法连接到服务器");
         });
 }
-function judge(){
-    if (sessionStorage.getItem('userId') == null ){
+
+function judge() {
+    if (sessionStorage.getItem('userId') == null) {
         return false;
     }
     const data = {
@@ -77,7 +77,7 @@ function judge(){
 
 // 页面加载完成后加载历史记录
 window.addEventListener('DOMContentLoaded', (event) => {
-    if(!judge()){
+    if (!judge()) {
         window.location.href = "../html/LoginAndRegister.html"
     }
     savedUserId = sessionStorage.getItem('userId');
@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 // 选中时设置选中项的样式，清除其他item的选中
 // 获取历史记录
-function ReadFile(src){
+function ReadFile(src) {
     fetch('http://localhost:80/Dia/fileRead/' + src, {
         method: 'GET',
         headers: {
@@ -105,16 +105,16 @@ function ReadFile(src){
             if (res.code === 20041) {
                 var lines = res.data.split("\n");
                 console.log(lines)
-                for (i = 0; i < lines.length;i++){
+                for (i = 0; i < lines.length; i++) {
                     var line = lines[i];
                     if (line.length === 0 || line.startsWith('#')) {
                         continue;
                     }
                     console.log(line);
                     var result = line.split("=");
-                    if(result[0] === "Bot"){
+                    if (result[0] === "Bot") {
                         addBotMessage(result[1]);
-                    }else {
+                    } else {
                         addUserMessage(result[1])
                     }
                 }
@@ -143,7 +143,7 @@ function setActive() {
     this.classList.add('active');
     console.log(this.id)
     //去数据库根据diaid和userid查找历史记录的路径
-    fetch('http://localhost:80/Dia/'+savedUserId+"/"+this.id, {
+    fetch('http://localhost:80/Dia/' + savedUserId + "/" + this.id, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json' //指定以json格式发送数据
@@ -188,7 +188,7 @@ function addDialog(did) {
     var close = newLi.querySelector(".close");
     close.addEventListener("click", function () {
         ul.removeChild(newLi);
-        fetch('http://localhost:80/Dia/'+savedUserId+"/"+did, { //删除数据库中的对话
+        fetch('http://localhost:80/Dia/' + savedUserId + "/" + did, { //删除数据库中的对话
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json' //指定以json格式发送数据
@@ -217,10 +217,12 @@ function addDialog(did) {
     });
     ul.insertBefore(newLi, ul.firstChild);
 }
+
 document.getElementById("closeModal").addEventListener("click", addNewDialog);
-function addNewDialog(){
+
+function addNewDialog() {
     const data = {
-        uid : sessionStorage.getItem('userId')
+        uid: sessionStorage.getItem('userId')
     }
     fetch('http://localhost:80/Dia', {
         method: 'POST',
@@ -256,4 +258,5 @@ function popWindow() {
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
 }
+
 document.getElementById("newDialog").addEventListener("click", popWindow);

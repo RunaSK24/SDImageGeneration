@@ -36,7 +36,6 @@ function botSendImage(imageMessage) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-
 //user发送文字消息
 function userSendText(textMessage) {
     const newMessage = document.createElement("div");
@@ -68,12 +67,16 @@ function userSendImage(imageMessage) {
 
 // 添加bot语句
 function addBotMessage(message1) {
-    console.log("???")
+    //创建一个机器人的消息元素
     const newMessage1 = document.createElement("div");
     newMessage1.className = "chat-message";
+
+    //判断是否为图片数据
     if (message1.includes("imageSource")) {
+        //在结果前加上识别base64数据的字符串
         let source = "data:image/jpeg;base64,";
 
+        //请求对应图片的base64数据
         fetch('http://localhost:80/Dia/Image/' + message1.split(":")[1], {
             method: 'GET',
             headers: {
@@ -85,10 +88,15 @@ function addBotMessage(message1) {
                 //接收到数据后的处理
                 if (res.code === 20041) {
                     console.log(res);
-                    source += res.data;
+                    source += res.data;//拼接完整图片
+                    //创建对应的图片元素放入消息中
                     newMessage1.innerHTML = `
-                    <div class="user-avatar"><img src="../images/bot.png" alt=""></div>
-                    <div class="message-content" style="background-color: #f7f7f7"><img src= ${source} ></div>`;
+                        <div class="user-avatar">
+                            <img src="../images/bot.png" alt="">
+                        </div>
+                        <div class="message-content" style="background-color: #f7f7f7">
+                            <img src= ${source} >
+                        </div>`;
                 } else {
                     alert(res.msg);
                 }
@@ -99,12 +107,14 @@ function addBotMessage(message1) {
                 alert("发生错误，无法连接到服务器");
             });
     } else {
+        //文本消息直接创建对应文本元素
         newMessage1.innerHTML = `
             <div class="user-avatar"><img src="../images/bot.png" alt=""></div>
             <div class="message-content" style="background-color: #f7f7f7">${message1}</div>
         `;
     }
 
+    //将创建的消息加入到对话框内
     const chatContainer = document.querySelector(".chat-container");
     chatContainer.appendChild(newMessage1)
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -172,7 +182,7 @@ function addUserMessage(message) {
 document.getElementById("send").addEventListener("click", function () {
     // console.log(image)
     if ((document.querySelector(".chat-input input").value == null
-        || document.querySelector(".chat-input input").value === "")
+            || document.querySelector(".chat-input input").value === "")
         && (image == "" || image == null)
     ) {
         alert("请先输入内容");
@@ -193,12 +203,12 @@ document.getElementById("send").addEventListener("click", function () {
         return
     }
 
-    if(document.querySelector(".chat-input input").value == null
-        || document.querySelector(".chat-input input").value === ""){
+    if (document.querySelector(".chat-input input").value == null
+        || document.querySelector(".chat-input input").value === "") {
         // 输入框无消息，默认图生图
         userSendText("进行图生图");
         data.message = "进行图生图"
-    }else {
+    } else {
         // 获取输入框中的消息内容
         userSendText(data.message);
     }
@@ -213,7 +223,7 @@ document.getElementById("send").addEventListener("click", function () {
         headers: {
             'Content-Type': 'application/json' //指定以json格式发送数据
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data)//将data转换为json格式
     })
         .then(res => res.json()) //以json格式解码
         .then(res => {
@@ -263,7 +273,7 @@ document.getElementById("image-input").addEventListener('change', function (even
             image = imageDataUrl.split(',')[1];
 
             //机器人回复
-            botSendText("您已经添加了一个图片了，请继续输入文字进行图像二次编辑  ,  或者点击发送进行图生图  >_<");
+            botSendText("您已经添加了一个图片了，请继续输入文字进行图像二次编辑, 或者点击发送进行图生图 >_<");
         });
 
         reader.readAsDataURL(file);
