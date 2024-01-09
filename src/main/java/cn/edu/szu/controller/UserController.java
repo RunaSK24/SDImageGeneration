@@ -48,5 +48,4 @@ public class UserController {
         }
         return new Result(code,check,msg.toString());
     }
-
 }

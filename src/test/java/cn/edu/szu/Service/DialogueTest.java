@@ -117,7 +117,7 @@ public class DialogueTest {
      */
     @Test
     public void getImageTest(){
-        String base64 = dialogueService.getImage("0cd579e19ba24acf83320751c6d74c5f.png");
+        String base64 = dialogueService.getImage("bot.png");
         assertNotNull(base64);
     }
 

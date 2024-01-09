@@ -130,8 +130,11 @@ public class DialogueServiceImpl implements DialogueService {
         else{
             //进行图生图
             fileName = String.format("%s.png", UUID.randomUUID().toString().replaceAll("-", ""));
+            //将图片和提示词封装为对象
             ImgToImgRequest body = StableDiffusionApiUtil.getImg2ImageRequestBody(msg.getImage(),msg.getMessage());
+            //发送HTTP请求并解析和提取返回结果
             final List<String> images = StableDiffusionApiUtil.callSdImgToImgApi(body);
+            //解析和保存图片
             for (String image : images) {
                 result = image;
                 ImageUtil.convertBase64StrToImage(image,fileName);
@@ -160,7 +163,6 @@ public class DialogueServiceImpl implements DialogueService {
             List<String> lines = readLinesFromFile(filePath);
             for (String line : lines) {
                 res.append(line + "\n");
-                // 在这里进行对每一行的处理
             }
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());

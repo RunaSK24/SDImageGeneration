@@ -183,7 +183,7 @@ document.getElementById("send").addEventListener("click", function () {
     // console.log(image)
     if ((document.querySelector(".chat-input input").value == null
             || document.querySelector(".chat-input input").value === "")
-        && (image == "" || image == null)
+        && (image === "" || image == null)
     ) {
         alert("请先输入内容");
         return;

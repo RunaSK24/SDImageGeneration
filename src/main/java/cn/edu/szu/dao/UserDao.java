@@ -3,12 +3,9 @@ package cn.edu.szu.dao;
 
 import cn.edu.szu.domain.User;
 import org.apache.ibatis.annotations.*;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 @Mapper
-public interface UserDao  {
+public interface UserDao {
     @Insert("insert into user (id, userName, passWord) " +
             "values (#{id},#{userName},#{passWord})")
     int save(User user);

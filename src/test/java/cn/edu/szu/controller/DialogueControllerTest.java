@@ -3,6 +3,7 @@ package cn.edu.szu.controller;
 import cn.edu.szu.domain.Dialogue;
 import cn.edu.szu.domain.Message;
 import cn.edu.szu.service.DialogueService;
+import cn.edu.szu.service.Impl.ImageUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,7 +231,7 @@ class DialogueControllerTest {
 
     @Test
     void testTextToImage() throws Exception {
-        Message mockMessage = new Message(1L,1L,null,"1girl");
+        Message mockMessage = new Message(1L, 1L, null, "1girl");
         //拦截controller发往业务层service的请求，返回mockDialogue
         when(dialogueService.textToImage(any(Message.class))).thenReturn("testImageBase64");
 
@@ -249,9 +250,9 @@ class DialogueControllerTest {
 
     @Test
     void testTextToImageErr() throws Exception {
-        Message mockMessage = new Message(1L,1L,null,"1girl");
+        Message mockMessage = new Message(1L, 1L, null, "1girl");
         //拦截controller发往业务层service的请求，返回mockDialogue
-        when(dialogueService.textToImage(any(Message.class))).thenReturn("");
+        when(dialogueService.textToImage(any(Message.class))).thenReturn(null);
 
         //判断请求返回结果
         mockMvc.perform(post("/Dia/imageGeneration")
@@ -268,7 +269,9 @@ class DialogueControllerTest {
 
     @Test
     void testImageToImage() throws Exception {
-        Message mockMessage = new Message(1L,1L,"imageBase64","1girl");
+        Message mockMessage = new Message(1L, 1L, "imageBase64", "1girl");
+        mockMessage.setImage(ImageUtil.convertImageToBase64Str("src/main/resources/static/images/bot.png"));
+
         //拦截controller发往业务层service的请求，返回mockDialogue
         when(dialogueService.imageToImage(any(Message.class))).thenReturn("testImageBase64");
 
@@ -287,9 +290,11 @@ class DialogueControllerTest {
 
     @Test
     void testImageToImageErr() throws Exception {
-        Message mockMessage = new Message(1L,1L,"imageBase64","1girl");
+        Message mockMessage = new Message(1L, 1L, "imageBase64", "1girl");
+        mockMessage.setImage(ImageUtil.convertImageToBase64Str("src/main/resources/static/images/bot.png"));
+
         //拦截controller发往业务层service的请求，返回mockDialogue
-        when(dialogueService.imageToImage(any(Message.class))).thenReturn("");
+        when(dialogueService.imageToImage(any(Message.class))).thenReturn(null);
 
         //判断请求返回结果
         mockMvc.perform(post("/Dia/imageGeneration")

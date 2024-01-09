@@ -15,7 +15,7 @@ public class DialogueController {
     @Autowired
     private DialogueService dialogueService;
 
-    //根据userId和DialogueId查找唯一Dia
+    // 根据userId和DialogueId查找唯一Dia
     @GetMapping("/{uid}/{did}")
     public Result getDiaByIds(@PathVariable Long uid, @PathVariable Long did) {
         Dialogue dialogue = dialogueService.selectByIds(uid, did);
@@ -31,7 +31,7 @@ public class DialogueController {
         return new Result(code, dialogue, msg);
     }
 
-    //    获取用户对话列表
+    // 获取用户对话列表
     @GetMapping("/{id}")
     public Result getUsersDialogue(@PathVariable Long id) {
         System.out.println(id + "  !!");
@@ -48,7 +48,7 @@ public class DialogueController {
         return new Result(code, dialogueList, msg);
     }
 
-    //读取文件(历史记录)
+    // 读取文件(历史记录)
     @GetMapping("/fileRead/{src}")
     public Result ReadFile(@PathVariable String src) {
         src = "./src/main/resources/history/" + src;
@@ -112,25 +112,27 @@ public class DialogueController {
 
     }
 
+    //文生图/图生图接口
     @PostMapping("/imageGeneration")
     public Result imageGeneration(@RequestBody Message msg) {
         String base64;
         //判断文生图还是图生图
         if (ImageUtil.isImageFromBase64(msg.getImage())) {
             System.out.println("接收到图生图请求");
-            System.out.println(msg);
+            //System.out.println(msg);
             base64 = dialogueService.imageToImage(msg);
         } else {
             System.out.println("接收到文生图请求");
             base64 = dialogueService.textToImage(msg);
         }
 
-        Integer code = base64.isEmpty() ? Code.HIS_LOAD_ERR : Code.HIS_LOAD_OK;
-        String mes = base64.isEmpty() ? "LOAD_ERR" : "LOAD_SUCCESS";
+        Integer code = base64 == null ? Code.HIS_LOAD_ERR : Code.HIS_LOAD_OK;
+        String mes = base64 == null ? "LOAD_ERR" : "LOAD_SUCCESS";
 
         return new Result(code, base64, mes);
     }
 
+    //获取图片内容接口
     @GetMapping("/Image/{fileName}")
     public Result getImage(@PathVariable String fileName) {
         System.out.println("获取图片" + fileName);

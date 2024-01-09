@@ -1,7 +1,7 @@
 // 需要操作的元素
 let items = list.querySelectorAll(".item");
-var numberOfItems = items.length;
-var savedUserId = 0;
+let numberOfItems = items.length;
+let savedUserId = 0;
 // alert("?")
 //获取保存的id
 // console.log(savedUserId);
@@ -20,7 +20,7 @@ function LoadDiaHis() {
             console.log(res)
             //接收到数据后的处理
             if (res.code === 20041) {
-                var arr = res.data;
+                const arr = res.data;
                 //将每个聊天记录添加到侧边栏
                 arr.forEach((obj) => {
                     console.log(obj.did)
@@ -29,8 +29,8 @@ function LoadDiaHis() {
             } else {
                 // 如果没有读取到任何对话，则弹窗并且新建一个对话
                 if (numberOfItems === 1) {
-                    var closeModalButton = document.getElementById("closeModal");
-                    var modal = document.getElementById("myModal");
+                    const closeModalButton = document.getElementById("closeModal");
+                    const modal = document.getElementById("myModal");
                     modal.style.display = "block";
                 }
             }
