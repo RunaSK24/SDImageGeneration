@@ -1,1 +1,16 @@
-
+1234456
+555
+User=Hello, World!
+Bot=imageSource:2e87e3a740a04a3d9ec33ec7dc8b5322.png
+User=imageSource:e830eb0e6fe14073aab9de17afea38d9.png
+Bot=鎮ㄥ凡缁忔坊鍔犱簡涓�涓浘鐗囦簡锛岃缁х画杈撳叆鏂囧瓧杩涜鍥惧儚浜屾缂栬緫, 鎴栬�呯偣鍑诲彂閫佽繘琛屽浘鐢熷浘 >_<
+User=Hello, World!
+Bot=imageSource:dc919a34b76b4fc3994c656751a501d4.png
+bot=hello
+User=Hello, World!
+Bot=imageSource:5632701fa24c44b7ba5069eb726683ce.png
+User=imageSource:ae94cad170f64bffa3c7533650f99041.png
+Bot=您已经添加了一个图片了，请继续输入文字进行图像二次编辑, 或者点击发送进行图生图 >_<
+User=Hello, World!
+Bot=imageSource:57e1c530345e4ea58e755b9fa9801327.png
+bot=hello

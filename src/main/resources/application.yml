@@ -11,3 +11,6 @@ spring:
 
   mvc:
     static-path-pattern: /static/**
+
+SD:
+  Url: "http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net"

@@ -2,10 +2,12 @@ package cn.edu.szu.service.Impl;
 
 import cn.edu.szu.domain.*;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,7 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 public class StableDiffusionApiUtil {
+    private static String SDUrl;
+
+    @Value("${SD.Url}")
+    public void setSDUrl(String SDUrl) {
+        StableDiffusionApiUtil.SDUrl = SDUrl;
+    }
+
     /**
      * 拼接TextToImg请求体
      *
@@ -183,7 +193,7 @@ public class StableDiffusionApiUtil {
 
         //发送请求
         ResponseEntity<JSONObject> entity =
-                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/txt2img", requestEntity, JSONObject.class);
+                restTemplate.postForEntity(SDUrl + "/sdapi/v1/txt2img", requestEntity, JSONObject.class);
 
         //处理返回消息
         final ToImgResponse toImgResponse = handleResponse(entity);
@@ -216,7 +226,7 @@ public class StableDiffusionApiUtil {
 
         //发送请求
         ResponseEntity<JSONObject> entity =
-                restTemplate.postForEntity("http://sd.fc-stable-diffusion-plus.1012799444647674.cn-shenzhen.fc.devsapp.net/sdapi/v1/img2img", requestEntity, JSONObject.class);
+                restTemplate.postForEntity(SDUrl + "/sdapi/v1/img2img", requestEntity, JSONObject.class);
 
         //处理返回消息
         final ToImgResponse toImgResponse = handleResponse(entity);
