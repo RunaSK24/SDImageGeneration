@@ -8,7 +8,7 @@ public class Result {
     private Integer code; // 结果码
     private Object data; // 返回的数据
     private String msg; // 返回的消息
-
+    // 这是一个测试，请忽略这个测试
     public Result() {
     }
 
